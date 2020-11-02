@@ -14147,7 +14147,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					for(var i=0;i<lib.suit.length;i++){
 						if(player.hasMark('xinfu_falu_'+lib.suit[i])) num++;
 					}
-					player.chooseCardButton(num,true,get.cards(num),'【点化】：按顺将卡牌置于牌堆顶（先选择的在上）').set('ai',function(button){
+					player.chooseCardButton(num,true,get.cards(num),'【点化】：按顺序将卡牌置于牌堆顶（先选择的在上）').set('ai',function(button){
 						return get.value(button.link);
 					});
 					'step 1'
