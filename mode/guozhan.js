@@ -5186,7 +5186,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					if(player.hasSkill('huangjintianbingfu')){
 						num+=player.storage.huangjintianbingfu.length;
 					}
-					player.chooseCardButton(num,true,get.cards(num),'按顺将卡牌置于牌堆顶（先选择的在上）').set('ai',function(button){
+					player.chooseCardButton(num,true,get.cards(num),'按顺序将卡牌置于牌堆顶（先选择的在上）').set('ai',function(button){
 						return get.value(button.link);
 					});
 					'step 1'
