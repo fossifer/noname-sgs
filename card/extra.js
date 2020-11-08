@@ -664,8 +664,8 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 							selectCard:-1,
 							viewAs:links[0],
 							precontent:function(){
--								delete event.result.skill;
--							},
+								delete event.result.skill;
+							},
 						};
 					},
 					prompt:function(links){
