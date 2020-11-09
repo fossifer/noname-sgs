@@ -30659,6 +30659,11 @@
 					dialog.add('<div class="text center">'+get.translation(game.players[i])+'</div>');
 					dialog.addSmall(hs);
 				}
+				var muniu=game.players[i].getEquip('muniu');
+				if(muniu&&muniu.cards&&muniu.cards.length){
+					dialog.add('<div class="text center">'+get.translation(game.players[i])+'的'+get.translation('muniu')+'</div>');
+					dialog.addSmall(muniu.cards);
+				}
 			}
 			for(var i=0;i<game.dead.length;i++){
 				if(!_status.connectMode&&game.dead[i].isUnderControl(true)&&game.layout!='long2') continue;
@@ -30666,6 +30671,11 @@
 				if(hs.length){
 					dialog.add('<div class="text center">'+get.translation(game.dead[i])+'</div>');
 					dialog.addSmall(hs);
+				}
+				var muniu=game.dead[i].getEquip('muniu');
+				if(muniu&&muniu.cards&&muniu.cards.length){
+					dialog.add('<div class="text center">'+get.translation(game.dead[i])+'的'+get.translation('muniu')+'</div>');
+					dialog.addSmall(muniu.cards);
 				}
 			}
 			dialog.add(ui.create.div('.placeholder.slim'));
