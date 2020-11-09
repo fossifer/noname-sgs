@@ -816,7 +816,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					return event.name=='damage'||(event.player.isAlive()&&!event.player.isFriendOf(player))
 				},
 				content:function(){
-					var num=trigger.num||1;
+					var num=1;
 					var list=_status.characterlist.randomRemove(num);
 					if(list.length){
 						player.storage.yigui.character.addArray(list);
