@@ -6186,7 +6186,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			liechi_info:'锁定技，当你进入濒死状态时，伤害来源弃置一张牌。',
 			xin_liaohua:'手杀廖化',
 			redangxian:'当先',
-			redangxian_info:'锁定技，回合开始时，你从弃牌堆中获得一张【杀】并进行一个额外的准备阶段。',
+			redangxian_info:'锁定技，回合开始时，你从弃牌堆中获得一张【杀】并进行一个额外的出牌阶段。',
 			refuli:'伏枥',
 			refuli_info:'限定技，当你处于濒死状态时，你可以将体力值回复至X点（X为势力数）。然后若你的体力值为全场唯一最多，你翻面。',
 			xin_caozhang:'手杀曹彰',
