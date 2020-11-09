@@ -486,11 +486,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						}
 					}
 					else{
-						if(trigger.num1<trigger.num2&&get.position(trigger.card,true)=='o'){
+						if(trigger.num1<trigger.num2&&get.position(trigger.card1,true)=='o'){
 							str+='/拼点牌';
 							cards.push(trigger.card1);
 						}
-						else if(trigger.num1>trigger.num2&&get.position(trigger.card,true)=='o'){
+						else if(trigger.num1>trigger.num2&&get.position(trigger.card2,true)=='o'){
 							str+='/拼点牌';
 							cards.push(trigger.card2);
 						}
