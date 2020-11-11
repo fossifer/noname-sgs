@@ -1,3 +1,5 @@
+无名杀是一款使用 JavaScript 实现的非官方版三国杀桌游。这是一个无名杀原始仓库的分支，鉴于原仓库 PR 审核并不活跃，分离出单独的仓库。
+
 客户端下载戳这里：
 
 GitHub： https://github.com/libccy/noname/releases/tag/SSS
@@ -14,11 +16,11 @@ Coding： https://nakamurayuri.coding.net/p/noname/d/noname/git/releases/SSS
 * 增加 package.json，不再上传 node_modules ([8915afd][8915afd], [8270c60][8270c60])
 * 改正一些描述和界面文字上的 typo ([732bc6f][732bc6f], [cea5ea1][cea5ea1] etc.)
 
-[c422da2]: https://github.com/lziad/noname/commit/c422da2
-[4d5c9d0]: https://github.com/lziad/noname/commit/4d5c9d0
-[302d2b7]: https://github.com/lziad/noname/commit/302d2b7
-[9fe005c]: https://github.com/lziad/noname/commit/9fe005c
-[8915afd]: https://github.com/lziad/noname/commit/8915afd
-[8270c60]: https://github.com/lziad/noname/commit/8270c60
-[732bc6f]: https://github.com/lziad/noname/commit/732bc6f
-[cea5ea1]: https://github.com/lziad/noname/commit/cea5ea1
+[c422da2]: https://github.com/lziad/noname-sgs/commit/c422da2
+[4d5c9d0]: https://github.com/lziad/noname-sgs/commit/4d5c9d0
+[302d2b7]: https://github.com/lziad/noname-sgs/commit/302d2b7
+[9fe005c]: https://github.com/lziad/noname-sgs/commit/9fe005c
+[8915afd]: https://github.com/lziad/noname-sgs/commit/8915afd
+[8270c60]: https://github.com/lziad/noname-sgs/commit/8270c60
+[732bc6f]: https://github.com/lziad/noname-sgs/commit/732bc6f
+[cea5ea1]: https://github.com/lziad/noname-sgs/commit/cea5ea1
