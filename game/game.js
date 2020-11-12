@@ -30458,6 +30458,9 @@
 					tr=document.createElement('tr');
 					tr.appendChild(document.createElement('td'));
 					td=document.createElement('td');
+					td.innerHTML='回合';
+					tr.appendChild(td);
+					td=document.createElement('td');
 					td.innerHTML='伤害';
 					tr.appendChild(td);
 					td=document.createElement('td');
@@ -30477,6 +30480,13 @@
 						tr=document.createElement('tr');
 						td=document.createElement('td');
 						td.innerHTML=get.translation(game.players[i]);
+						tr.appendChild(td);
+						td=document.createElement('td');
+						num=0;
+						for(j=0;j<game.players[i].stat.length;j++){
+							if(game.players[i].stat[j].isMe===true) num++;
+						}
+						td.innerHTML=num;
 						tr.appendChild(td);
 						td=document.createElement('td');
 						num=0;
@@ -30527,6 +30537,9 @@
 						tr=document.createElement('tr');
 						tr.appendChild(document.createElement('td'));
 						td=document.createElement('td');
+						td.innerHTML='回合';
+						tr.appendChild(td);
+						td=document.createElement('td');
 						td.innerHTML='伤害';
 						tr.appendChild(td);
 						td=document.createElement('td');
@@ -30547,6 +30560,13 @@
 						tr=document.createElement('tr');
 						td=document.createElement('td');
 						td.innerHTML=get.translation(game.dead[i]);
+						tr.appendChild(td);
+						td=document.createElement('td');
+						num=0;
+						for(j=0;j<game.dead[i].stat.length;j++){
+							if(game.dead[i].stat[j].isMe===true) num++;
+						}
+						td.innerHTML=num;
 						tr.appendChild(td);
 						td=document.createElement('td');
 						num=0;
@@ -30597,6 +30617,13 @@
 						tr=document.createElement('tr');
 						td=document.createElement('td');
 						td.innerHTML=get.translation(game.additionaldead[i]);
+						tr.appendChild(td);
+						td=document.createElement('td');
+						num=0;
+						for(j=0;j<game.additionaldead[i].stat.length;j++){
+							if(game.additionaldead[i].stat[j].isMe===true) num++;
+						}
+						td.innerHTML=num;
 						tr.appendChild(td);
 						td=document.createElement('td');
 						num=0;
