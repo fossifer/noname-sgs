@@ -14305,16 +14305,6 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				ai:{
 					threaten:2.2
-					player.chooseCardButton(num,true,get.cards(num),'【点化】：按顺序将卡牌置于牌堆顶（先选择的在上）').set('ai',function(button){
-						return get.value(button.link);
-					});
-					'step 1'
-					if(result.bool){
-						var list=result.links.slice(0);
-						while(list.length){
-							ui.cardPile.insertBefore(list.pop(),ui.cardPile.firstChild);
-						}
-					}
 				},
 			},
 			"xinfu_zhenyi":{
