@@ -830,6 +830,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			xindiaodu:{
 				audio:"diaodu",
 				group:'xindiaodu_use',
+				frequent:true,
 				subSkill:{
 					use:{
 						trigger:{
