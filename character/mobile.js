@@ -3421,7 +3421,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				content:function(){
 					'step 0'
-					player.chooseTarget(get.prompt('liezhi'),'弃置至多两名角色区域内的各一张牌',[1,2],function(card,player,target){
+					player.chooseTarget(get.prompt('liezhi'),'弃置至多两名其他角色区域内的各一张牌',[1,2],function(card,player,target){
 						return target!=player&&target.countDiscardableCards(player,'hej')>0;
 					}).ai=function(target){
 						var player=_status.event.player;
@@ -6039,7 +6039,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			shouye:'守邺',
 			shouye_info:'每回合限一次。当其他角色使用牌指定你为唯一目标时，你可以与其进行【对策】。若你赢，则你取消此牌的目标，且你于此牌结算完成后获得其对应的所有实体牌。',
 			liezhi:'烈直',
-			liezhi_info:'准备阶段，你可以依次弃置至多两名角色区域内的各一张牌。若你受到过伤害，则〖烈直〗于你的下个回合无效。',
+			liezhi_info:'准备阶段，你可以依次弃置至多两名其他角色区域内的一张牌。若你受到过伤害，则〖烈直〗于你的下个回合无效。',
 			
 			xinzhanyi:'战意',
 			xinzhanyi_info:'出牌阶段限一次，你可以弃置一张牌并失去1点体力，然后根据你弃置的牌获得以下效果直到回合结束：基本牌，你可以将一张基本牌当作杀、酒或桃使用，且你本回合第一次以此法使用的牌的回复值/伤害值+1；锦囊牌，摸三张牌且你使用的牌不能被【无懈可击】响应；装备牌，你使用【杀】指定目标角色后，其弃置两张牌，然后你获得其中的一张。',
