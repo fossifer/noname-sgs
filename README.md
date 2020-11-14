@@ -9,6 +9,8 @@ Coding： https://nakamurayuri.coding.net/p/noname/d/noname/git/releases/SSS
 ---
 
 和原仓库相比的改动：
+* 允许国战吕范〖调度〗选择是否自动发动摸牌 ([20fb824][20fb824])
+* 修复手杀审配〖烈直〗描述问题，实际上不能弃自己牌 ([6278a53][6278a53])
 * 在游戏结束后的统计中加入回合数，以便对比各项数据 ([f040916][f040916])
 * 修复他人向手杀简雍发起拼点后卡死的问题 ([c422da2][c422da2])
 * 游戏结束时显示木牛流马中的牌 ([4d5c9d0][4d5c9d0])
@@ -17,6 +19,8 @@ Coding： https://nakamurayuri.coding.net/p/noname/d/noname/git/releases/SSS
 * 增加 package.json，不再上传 node_modules ([8915afd][8915afd], [8270c60][8270c60])
 * 改正一些描述和界面文字上的 typo ([732bc6f][732bc6f], [cea5ea1][cea5ea1] etc.)
 
+[20fb824]: https://github.com/lziad/noname-sgs/commit/20fb824
+[6278a53]: https://github.com/lziad/noname-sgs/commit/6278a53
 [f040916]: https://github.com/lziad/noname-sgs/commit/f040916
 [c422da2]: https://github.com/lziad/noname-sgs/commit/c422da2
 [4d5c9d0]: https://github.com/lziad/noname-sgs/commit/4d5c9d0
