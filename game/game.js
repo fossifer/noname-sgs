@@ -11587,6 +11587,12 @@
 					else{
 						event.result='ai';
 					}
+					if(event.skill){
+						var info=get.info(event.skill);
+						if(info.position&&info.position.includes('m')&&event.player.getEquip(5)&&event.player.getEquip(5).cards){
+							event.player.showMuniuCards(event.skill);
+						}
+					}
 					"step 1"
 					if(event.result=='ai'){
 						var ok=game.check();
@@ -11742,6 +11748,12 @@
 						}
 						else{
 							event.result='ai';
+						}
+					}
+					if(event.skill){
+						var info=get.info(event.skill);
+						if(info.position&&info.position.includes('m')&&event.player.getEquip(5)&&event.player.getEquip(5).cards){
+							event.player.showMuniuCards(event.skill);
 						}
 					}
 					"step 1"
@@ -12571,7 +12583,7 @@
 									else if(range[1]==Infinity) str+='至少'+get.cnNumber(range[0]);
 									else str+=get.cnNumber(range[0])+'至'+get.cnNumber(range[1]);
 									str+='张';
-									if(event.position=='h'||event.position==undefined) str+='手';
+									if(event.position=='h'||event.position=='hm'||event.position==undefined) str+='手';
 									if(event.position=='e') str+='装备';
 									str+='牌';
 								}
@@ -12597,6 +12609,9 @@
 						else{
 							event.result='ai';
 						}
+					}
+					if(event.position&&event.position.includes('m')){
+						event.player.showMuniuCards(event.name);
 					}
 					"step 1"
 					if(event.result=='ai'){
@@ -16985,6 +17000,13 @@
 								}
 							}
 						}
+						else if(arg1[i]=='m'){
+							for(j=0;j<this.node.equips.childElementCount;j++){
+								if(this.node.equips.childNodes[j].name=='muniu'&&this.node.equips.childNodes[j].cards){
+									cards=cards.concat(this.node.equips.childNodes[j].cards);
+								}
+							}
+						}
 					}
 					if(arguments.length==1){
 						return cards;
@@ -20733,8 +20755,8 @@
 					if(raw) range=game.checkMod(player,player,range,'globalFrom',player);
 					range=game.checkMod(player,player,range,'attackFrom',player);
 					var equips=player.getCards('e',function(card){
-				return !ui.selected.cards||!ui.selected.cards.contains(card);
-			});
+						return !ui.selected.cards||!ui.selected.cards.contains(card);
+					});
 					for(var i=0;i<equips.length;i++){
 						var info=get.info(equips[i]).distance;
 						if(!info) continue;
@@ -22902,6 +22924,33 @@
 					else{
 						game.delay();
 					}
+				},
+				// 显示木马牌相关函数
+				showMuniuCards:function(skill){
+					if(!this.getEquip(5)||!this.getEquip(5).cards) return;
+					// 防止多个技能嵌套显示/隐藏木马牌
+					if(this.muniu_shown_by_skill) return;
+					this.muniu_shown_by_skill=skill;
+					var muniu_cards=this.getEquip(5).cards;
+					for(var i=0;i<muniu_cards.length;i++){
+						muniu_cards[i].classList.add('muniu_handcard');
+						this.node.handcards1.appendChild(muniu_cards[i]);
+					}
+					ui.updatehl();
+				},
+				hideMuniuCards:function(skill){
+					if(this.muniu_shown_by_skill!==skill) return;
+					this.muniu_shown_by_skill='';
+					if(!this.getEquip(5)||!this.getEquip(5).cards) return;
+					for(var i=this.node.handcards1.childNodes.length-1;i>=0;i--){
+						var muniu_card=this.node.handcards1.childNodes[i];
+						if(muniu_card.classList.contains('muniu_handcard')){
+							muniu_card.classList.remove('muniu_handcard');
+							this.node.handcards1.removeChild(muniu_card);
+							ui.special.appendChild(muniu_card);
+						}
+					}
+					ui.updatehl();
 				}
 			},
 			card:{
@@ -24863,7 +24912,7 @@
 							name:"sha",
 						},
 						viewAsFilter:function (player){
-							if(!player.countCards('h','tao')) return false;
+							if(!player.countCards('hm','tao')) return false;
 						},
 						prompt:"将一张桃当杀使用或打出",
 						check:function (){return 1},
@@ -24875,7 +24924,7 @@
 							},
 							respondSha:true,
 							skillTagFilter:function (player){
-								if(!player.countCards('h','tao')) return false;
+								if(!player.countCards('hm','tao')) return false;
 							},
 							order:function (){
 								return get.order({name:'sha'})-0.1;
@@ -24894,12 +24943,12 @@
 						prompt:"将一张桃当闪打出",
 						check:function (){return 1},
 						viewAsFilter:function (player){
-							if(!player.countCards('h','tao')) return false;
+							if(!player.countCards('hm','tao')) return false;
 						},
 						ai:{
 							respondShan:true,
 							skillTagFilter:function (player){
-								if(!player.countCards('h','tao')) return false;
+								if(!player.countCards('hm','tao')) return false;
 							},
 							effect:{
 								target:function (card,player,target,current){
@@ -31181,6 +31230,9 @@
 				}
 				else{
 					var cards=player.getCards(event.position);
+					if(event.skill&&get.info(event.skill).viewAs&&(event.name=='chooseToUse'||event.name=='chooseToRespond')&&event.player.getEquip(5)&&event.player.getEquip(5).cards){
+						cards=cards.concat(event.player.getEquip(5).cards);
+					}
 					var firstCheck=false;
 					range=get.select(event.selectCard);
 					if(!event._cardChoice&&typeof event.selectCard!='function'&&
@@ -46225,6 +46277,9 @@
 						}
 					}
 				}
+				if(info.viewAs&&(event.name=='chooseToUse'||event.name=='chooseToRespond')&&event.player.getEquip(5)&&event.player.getEquip(5).cards){
+					event.player.showMuniuCards(skill);
+				}
 				if(typeof event.skillDialog=='object'){
 					event.skillDialog.close();
 				}
@@ -46277,9 +46332,10 @@
 					node.parentNode.close();
 				}
 				if(event.skill){
+					var info=get.info(event.skill);
 					event.result.skill=event.skill;
-					if(typeof get.info(event.skill).viewAs=='function') event.result.card=get.info(event.skill).viewAs(event.result.cards,event.player);
-					else event.result.card=get.copy(get.info(event.skill).viewAs);
+					if(typeof info.viewAs=='function') event.result.card=info.viewAs(event.result.cards,event.player);
+					else event.result.card=get.copy(info.viewAs);
 					if(event.result.cards.length==1&&event.result.card){
 						event.result.card.suit=get.suit(event.result.cards[0]);
 						event.result.card.number=get.number(event.result.cards[0]);
@@ -46287,11 +46343,16 @@
 					if(event.skillDialog&&get.objtype(event.skillDialog)=='div'){
 						event.skillDialog.close();
 					}
+					if(((info.viewAs&&['chooseToUse','chooseToRespond'].includes(event.name))||(info.position&&info.position.includes('m')))&&event.player.getEquip(5)&&event.player.getEquip(5).cards){
+						event.player.hideMuniuCards(event.skill);
+					}
 					var cards=event.player.getCards('hej');
 					for(var i=0;i<cards.length;i++){
 						cards[i].recheck('useSkill');
 					}
 					event.restore();
+				} else if(event.name=='chooseCard'&&event.position&&event.position.includes('m')){
+					event.player.hideMuniuCards(event.name);
 				}
 				if(ui.skills) ui.skills.close();
 				if(ui.skills2) ui.skills2.close();
@@ -46306,6 +46367,14 @@
 				var event=_status.event;
 				if(event.custom.replace.confirm){
 					event.custom.replace.confirm(false);return;
+				}
+				if(event.skill){
+					var info=get.info(event.skill);
+					if(((info.viewAs&&['chooseToUse','chooseToRespond'].includes(event.name))||(info.position&&info.position.includes('m')))&&event.player.getEquip(5)&&event.player.getEquip(5).cards){
+						event.player.hideMuniuCards(event.skill);
+					}
+				} else if(event.name=='chooseCard'&&event.position&&event.position.includes('m')){
+					event.player.hideMuniuCards(event.name);
 				}
 				if(event.skill&&!event.norestore){
 					if(event.skillDialog&&get.objtype(event.skillDialog)=='div'){
@@ -49005,7 +49074,7 @@
 				if(obj.length<=3){
 					var bool=true;
 					for(i=0;i<obj.length;i++){
-						if(/h|e|j/.test(obj[i])==false){
+						if(/h|m|e|j/.test(obj[i])==false){
 							bool=false;break;
 						}
 					}
@@ -49541,6 +49610,13 @@
 					selectable.push(cards[i]);
 				}
 			}
+			var muniu_cards=_status.event.player.getCards('m');
+            for(var i=0;i<muniu_cards.length;i++){
+                if(muniu_cards[i].classList.contains('muniu_handcard')&&
+                    muniu_cards[i].classList.contains('selected')==false){
+                    selectable.push(muniu_cards[i]);
+                }
+            }
 			if(sort){
 				selectable.sort(sort);
 			}
