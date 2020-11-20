@@ -154,7 +154,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					result:{
 						target:function(player,target){
 							if(target==player){
-								if(target.countCards('he',{suit:'heart'})){
+								if(target.countCards('hme',{suit:'heart'})){
 									if(target.isDamaged()) return 1.5;
 								}
 								else{
@@ -1216,13 +1216,13 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 						position:'he',
 						viewAs:{name:'tao'},
 						viewAsFilter:function(player){
-							return player.countCards('he',{suit:'heart'})>0;
+							return player.countCards('hme',{suit:'heart'})>0;
 						},
 						prompt:'将一张红桃牌当桃使用',
 						check:function(card){return 10-get.value(card)},
 						ai:{
 							skillTagFilter:function(player){
-								return player.countCards('he',{suit:'heart'})>0;
+								return player.countCards('hme',{suit:'heart'})>0;
 							},
 							save:true,
 							respondTao:true,
@@ -1575,7 +1575,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				usable:1,
 				viewAs:{name:'sha'},
 				viewAsFilter:function(player){
-					if(!player.countCards('h')) return false;
+					if(!player.countCards('hm')) return false;
 				},
 				prompt:'将一张手牌当杀使用',
 				check:function(card){return 5-get.value(card)},
@@ -1586,7 +1586,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					},
 					skillTagFilter:function(player,tag,arg){
 						if(arg!='use') return false;
-						if(!player.countCards('h')) return false;
+						if(!player.countCards('hm')) return false;
 					},
 				},
 			},

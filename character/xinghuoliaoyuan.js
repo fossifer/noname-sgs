@@ -1449,7 +1449,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					},
 					aiValue:function(player,card,num){
 						if(card.name=='zhangba') return 15;
-						if(player.getEquip('zhangba')&&player.countCards('h')>1&&['shan','tao'].contains(card.name)) return 0;
+						if(player.getEquip('zhangba')&&player.countCards('hm')>1&&['shan','tao'].contains(card.name)) return 0;
 						if(card.name=='shan'||card.name=='tao') return num/2;
 					},
 				},
@@ -1459,11 +1459,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				discard:false,
 				filter:function (event,player){
 					if(player.hasJudge('lebu')) return false;
-					return player.countCards('he',{suit:'diamond'})>0;
+					return player.countCards('hme',{suit:'diamond'})>0;
 				},
 				viewAs:{name:'lebu'},
 				//prepare:"throw",
-				position:"he",
+				position:"hme",
 				filterCard:function(card,player,event){
 					return get.suit(card)=='diamond'&&player.canAddJudge({name:'lebu',cards:[card]});
 				},
@@ -1473,12 +1473,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				check:function(card){
 					var player=_status.event.player;
-					if(!player.getEquip('zhangba')&&player.countCards('h','sha')<2){
-						if(player.countCards('h',function(cardx){
+					if(!player.getEquip('zhangba')&&player.countCards('hm','sha')<2){
+						if(player.countCards('hm',function(cardx){
 							return cardx!=card&&cardx.name=='shan';
 						})>0) return 0;
 						var damaged=player.maxHp-player.hp-1;
-						var ts=player.countCards('h',function(cardx){
+						var ts=player.countCards('hm',function(cardx){
 							return cardx!=card&&cardx.name=='tao';
 						});
 						if(ts>0&&ts>damaged) return 0;

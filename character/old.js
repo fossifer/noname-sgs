@@ -81,7 +81,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				group:["old_guhuo_guess","old_guhuo_respond","old_guhuo_wuxie"],
 				enable:"chooseToUse",
 				filter:function (event,player){
-					if(!player.countCards('h')) return false;
+					if(!player.countCards('hm')) return false;
 					var list=['sha','tao','shan','jiu','taoyuan','wugu','juedou','huogong','jiedao','tiesuo','guohe','shunshou','wuzhong','wanjian','nanman'];
 					if(get.mode()=='guozhan'){
 						list=list.concat(['xietianzi','shuiyanqijunx','lulitongxin','lianjunshengyan','chiling','diaohulishan','yuanjiao','huoshaolianying']);
@@ -118,6 +118,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						return {
 							filterCard:true,
 							selectCard:1,
+							position:'hm',
 							viewAs:{name:links[0][2],nature:links[0][3]},
 						}
 					},
@@ -205,7 +206,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filter:function (event,player){
 					if(event.responded) return false;
 					if(!event.filterCard({name:'shan'})&&!event.filterCard({name:'sha'})) return false;
-					if(!player.countCards('h')) return false;
+					if(!player.countCards('hm')) return false;
 					return true;
 				},
 				direct:true,
@@ -213,7 +214,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					'step 0'
 					if(trigger.filterCard({name:'shan'})&&lib.filter.cardRespondable({name:'shan'},player,trigger)) event.name='shan';
 					else event.name='sha';
-					player.chooseCard('是否发动【蛊惑】，将一张手牌当做'+get.translation(event.name)+'打出？');
+					player.chooseCard('是否发动【蛊惑】，将一张手牌当做'+get.translation(event.name)+'打出？','hm');
 					'step 1'
 					if(result.bool){
 						player.logSkill('old_guhuo_guess');
@@ -291,7 +292,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:"chooseToUse",
 				filterCard:true,
 				viewAsFilter:function (player){
-					return player.countCards('h')>0;
+					return player.countCards('hm')>0;
 				},
 				viewAs:{
 					name:"wuxie",

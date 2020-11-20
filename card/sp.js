@@ -449,7 +449,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				filterCard:true,
 				viewAs:{name:'shan'},
 				viewAsFilter:function(player){
-					if(!player.countCards('h')) return false;
+					if(!player.countCards('hm')) return false;
 				},
 				prompt:'将一张手牌当闪使用或打出',
 				check:function(card){
@@ -458,11 +458,11 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				ai:{
 					respondShan:true,
 					skillTagFilter:function(player){
-						if(!player.countCards('h')) return false;
+						if(!player.countCards('hm')) return false;
 					},
 					effect:{
 						target:function(card,player,target,current){
-							if(get.tag(card,'respondShan')&&current<0&&target.countCards('h')) return 0.59
+							if(get.tag(card,'respondShan')&&current<0&&target.countCards('hm')) return 0.59
 						}
 					},
 					order:4,

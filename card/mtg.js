@@ -582,7 +582,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				viewAs:{name:'sha'},
 				viewAsFilter:function(player){
 					if(!player.getEquip(1)) return false;
-					if(!player.countCards('h',{type:'basic'})) return false;
+					if(!player.countCards('hm',{type:'basic'})) return false;
 				},
 				prompt:'将一张基本牌当杀使用',
 				check:function(card){return 6-get.value(card)},
@@ -595,7 +595,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					skillTagFilter:function(player,tag,arg){
 						if(arg!='use') return false;
 						if(!player.getEquip(1)) return false;
-						if(!player.countCards('h',{type:'basic'})) return false;
+						if(!player.countCards('hm',{type:'basic'})) return false;
 					},
 				}
 			},

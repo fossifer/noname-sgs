@@ -2223,15 +2223,15 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					skillTagFilter:function(player,tag){
 						switch(tag){
 							case 'respondSha':{
-								if(player.countCards('he',{suit:'diamond'})<Math.max(1,player.hp)) return false;
+								if(player.countCards('hme',{suit:'diamond'})<Math.max(1,player.hp)) return false;
 								break;
 							}
 							case 'respondShan':{
-								if(player.countCards('he',{suit:'club'})<Math.max(1,player.hp)) return false;
+								if(player.countCards('hme',{suit:'club'})<Math.max(1,player.hp)) return false;
 								break;
 							}
 							case 'save':{
-								if(player.countCards('he',{suit:'heart'})<Math.max(1,player.hp)) return false;
+								if(player.countCards('hme',{suit:'heart'})<Math.max(1,player.hp)) return false;
 								break;
 							}
 						}
@@ -2259,7 +2259,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将'+get.cnNumber(Math.max(1,_status.event.player.hp))+'张红桃牌当作桃使用';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(_status.event.player.hp>1) return 0;
 					return 10-get.value(card);
@@ -2269,7 +2269,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				viewAs:{name:'tao'},
 				filter:function(event,player){
-					return player.countCards('he',{suit:'heart'})>=player.hp;
+					return player.countCards('hme',{suit:'heart'})>=player.hp;
 				},
 				filterCard:function(card){
 					return get.suit(card)=='heart';
@@ -2281,7 +2281,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将'+get.cnNumber(Math.max(1,_status.event.player.hp))+'张方片当作火杀使用或打出';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(_status.event.player.hp>1) return 0;
 					return 10-get.value(card);
@@ -2291,7 +2291,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				viewAs:{name:'sha',nature:'fire'},
 				filter:function(event,player){
-					return player.countCards('he',{suit:'diamond'})>=player.hp;
+					return player.countCards('hme',{suit:'diamond'})>=player.hp;
 				},
 				filterCard:function(card){
 					return get.suit(card)=='diamond';
@@ -2303,7 +2303,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将'+get.cnNumber(Math.max(1,_status.event.player.hp))+'张黑桃牌当作无懈可击使用';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(_status.event.player.hp>1) return 0;
 					return 7-get.value(card);
@@ -2313,7 +2313,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				viewAs:{name:'wuxie'},
 				viewAsFilter:function(player){
-					return player.countCards('he',{suit:'spade'})>=player.hp;
+					return player.countCards('hme',{suit:'spade'})>=player.hp;
 				},
 				filterCard:function(card){
 					return get.suit(card)=='spade';
@@ -2325,7 +2325,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将'+get.cnNumber(Math.max(1,_status.event.player.hp))+'张梅花牌当作闪使用或打出';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(_status.event.player.hp>1) return 0;
 					return 10-get.value(card);
@@ -2387,7 +2387,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						var map={sha:'diamond',tao:'heart'}
 						for(var i=0;i<list.length;i++){
 							var name=list[i];
-		 				if(player.countCards('he',function(card){
+		 				if(player.countCards('hme',function(card){
 		 					return (name!='sha'||get.value(card)<5)&&get.suit(card,player)==map[name];
 		 				})>0&&player.getUseValue({name:name,nature:name=='sha'?'fire':null})>0){
 		 					var temp=get.order({name:name,nature:name=='sha'?'fire':null});
@@ -2406,8 +2406,8 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				selectCard:[1,2],
 				//确保选择第一张牌后 重新检测第二张牌的合法性 避免选择两张花色不同的牌
 				complexCard:true,
-				//选牌范围：手牌区和装备区
-				position:'he',
+				//选牌范围：手牌区、木牛流马和装备区
+				position:'hme',
 				//选牌合法性判断
 				filterCard:function(card,player,event){
 					//如果已经选了一张牌 那么第二张牌和第一张花色相同即可
@@ -2433,13 +2433,13 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					//获取当前时机的卡牌选择限制
 					var filter=event.filterCard;
 					//如果当前时机能够使用/打出火杀并且角色有方片 那么可以发动技能
-					if(filter({name:'sha',nature:'fire'},player,event)&&player.countCards('he',{suit:'diamond'})) return true;
+					if(filter({name:'sha',nature:'fire'},player,event)&&player.countCards('hme',{suit:'diamond'})) return true;
 					//如果当前时机能够使用/打出闪并且角色有梅花 那么可以发动技能
-					if(filter({name:'shan'},player,event)&&player.countCards('he',{suit:'club'})) return true;
+					if(filter({name:'shan'},player,event)&&player.countCards('hme',{suit:'club'})) return true;
 					//如果当前时机能够使用/打出桃并且角色有红桃 那么可以发动技能
-					if(filter({name:'tao'},player,event)&&player.countCards('he',{suit:'heart'})) return true;
+					if(filter({name:'tao'},player,event)&&player.countCards('hme',{suit:'heart'})) return true;
 					//如果当前时机能够使用/打出无懈可击并且角色有黑桃 那么可以发动技能
-					if(filter({name:'wuxie'},player,event)&&player.countCards('he',{suit:'spade'})) return true;
+					if(filter({name:'wuxie'},player,event)&&player.countCards('hme',{suit:'spade'})) return true;
 					return false;
 				},
 				ai:{
@@ -2454,7 +2454,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							case 'respondShan':name='club';break;
 							case 'save':name='heart';break;
 						}
-						if(!player.countCards('he',{suit:name})) return false;
+						if(!player.countCards('hme',{suit:name})) return false;
 					},
 					//AI牌序
 					order:function(item,player){
@@ -2464,7 +2464,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							var map={sha:'diamond',tao:'heart'}
 							for(var i=0;i<list.length;i++){
 								var name=list[i];
-			 				if(player.countCards('he',function(card){
+			 				if(player.countCards('hme',function(card){
 		 						return (name!='sha'||get.value(card)<5)&&get.suit(card,player)==map[name];
 		 					})>0&&player.getUseValue({name:name,nature:name=='sha'?'fire':null})>0){
 			 					var temp=get.order({name:name,nature:name=='sha'?'fire':null});
@@ -2479,7 +2479,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				//让系统知道玩家“有无懈”
 				hiddenCard:function(player,name){
-					return name=='wuxie'&&player.countCards('he',{suit:'spade'})>0;
+					return name=='wuxie'&&player.countCards('hme',{suit:'spade'})>0;
 				},
 				group:['xinlonghun_num','xinlonghun_discard'],
 			},
@@ -2489,15 +2489,15 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					skillTagFilter:function(player,tag){
 						switch(tag){
 							case 'respondSha':{
-								if(player.countCards('he',{suit:'diamond'})==0) return false;
+								if(player.countCards('hme',{suit:'diamond'})==0) return false;
 								break;
 							}
 							case 'respondShan':{
-								if(player.countCards('he',{suit:'club'})==0) return false;
+								if(player.countCards('hme',{suit:'club'})==0) return false;
 								break;
 							}
 							case 'save':{
-								if(player.countCards('he',{suit:'heart'})==0) return false;
+								if(player.countCards('hme',{suit:'heart'})==0) return false;
 								break;
 							}
 						}
@@ -2547,7 +2547,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将至多两张红桃牌当作桃使用';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(ui.selected.cards.length) return 0;
 					return 10-get.value(card);
@@ -2555,7 +2555,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				selectCard:[1,2],
 				viewAs:{name:'tao'},
 				filter:function(event,player){
-					return player.countCards('he',{suit:'heart'})>0;
+					return player.countCards('hme',{suit:'heart'})>0;
 				},
 				filterCard:function(card){
 					return get.suit(card)=='heart';
@@ -2567,7 +2567,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将至多两张方片牌当作火杀使用或打出';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(ui.selected.cards.length) return 0;
 					return 10-get.value(card);
@@ -2575,7 +2575,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				selectCard:[1,2],
 				viewAs:{name:'sha',nature:'fire'},
 				filter:function(event,player){
-					return player.countCards('he',{suit:'diamond'})>0;
+					return player.countCards('hme',{suit:'diamond'})>0;
 				},
 				filterCard:function(card){
 					return get.suit(card)=='diamond';
@@ -2587,7 +2587,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将至多两张黑桃牌当作无懈可击使用';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(ui.selected.cards.length) return 0;
 					return 7-get.value(card);
@@ -2595,7 +2595,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				selectCard:[1,2],
 				viewAs:{name:'wuxie'},
 				viewAsFilter:function(player){
-					return player.countCards('he',{suit:'spade'})>0;
+					return player.countCards('hme',{suit:'spade'})>0;
 				},
 				filterCard:function(card){
 					return get.suit(card)=='spade';
@@ -2607,7 +2607,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				prompt:function(){
 					return '将至多两张梅花牌当作闪使用或打出';
 				},
-				position:'he',
+				position:'hme',
 				check:function(card,event){
 					if(ui.selected.cards.length) return 0;
 					return 10-get.value(card);
@@ -2615,7 +2615,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				selectCard:[1,2],
 				viewAs:{name:'shan'},
 				filter:function(event,player){
-					return player.countCards('he',{suit:'club'})>0;
+					return player.countCards('hme',{suit:'club'})>0;
 				},
 				filterCard:function(card){
 					return get.suit(card)=='club';

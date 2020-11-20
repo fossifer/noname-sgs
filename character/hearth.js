@@ -1973,6 +1973,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							},
 							viewAs:{name:links[0][2],nature:links[0][3]},
 							popname:true,
+							position:'hm',
 							ai1:function(card){
 								return 6-get.value(card);
 							}
@@ -3224,9 +3225,9 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'phaseUse',
 				viewAs:{name:'juedou'},
 				filterCard:{color:'black'},
-				position:'he',
+				position:'hme',
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{color:'black'})) return false;
+					if(!player.countCards('hme',{color:'black'})) return false;
 				},
 				check:function(card){
 					return 6-get.value(card);
@@ -3342,13 +3343,13 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			aoshu:{
 				enable:'phaseUse',
 				usable:1,
-				position:'he',
+				position:'hme',
 				filterCard:function(card){
 					return get.suit(card)=='spade';
 				},
 				viewAs:{name:'wuzhong'},
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{suit:'spade'})) return false;
+					if(!player.countCards('hme',{suit:'spade'})) return false;
 				},
 				prompt:'将一张黑桃牌当作无中生有使用',
 				check:function(card){return 7-get.value(card)},
@@ -4054,7 +4055,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'phaseUse',
 				usable:1,
 				filter:function(event,player){
-					return player.countCards('he',{color:'red'})>0
+					return player.countCards('hme',{color:'red'})>0
 				},
 				init:function(player){
 					player.storage.nuyan=[];
@@ -4120,7 +4121,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						return {
 							filterCard:{color:'red'},
 							selectCard:1,
-							position:'he',
+							position:'hme',
 							popname:true,
 							viewAs:{name:links[0][2]},
 							ai1:function(card){
@@ -6998,16 +6999,16 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:['chooseToUse','chooseToRespond'],
 				filterCard:{type:'equip'},
 				filter:function(event,player){
-					return player.countCards('he',{type:'equip'})>0;
+					return player.countCards('hme',{type:'equip'})>0;
 				},
 				viewAs:{name:'shan'},
-				position:'he',
+				position:'hme',
 				prompt:'将一张装备牌当闪使用或打出',
 				check:function(){return 1},
 				ai:{
 					respondShan:true,
 					skillTagFilter:function(player){
-						if(!player.countCards('he',{type:'equip'})) return false;
+						if(!player.countCards('hme',{type:'equip'})) return false;
 					}
 				}
 			},

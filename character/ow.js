@@ -251,7 +251,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			dianji:{
 				enable:'phaseUse',
 				filter:function(event,player){
-					return player.countCards('h')>0;
+					return player.countCards('hm')>0;
 				},
 				filterCard:true,
 				usable:1,
@@ -2348,16 +2348,16 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filterCard:function(card){
 					return get.color(card)=='black';
 				},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'sha'},
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{color:'black'})) return false;
+					if(!player.countCards('hme',{color:'black'})) return false;
 				},
 				prompt:'将一张黑色牌当杀使用或打出',
 				check:function(card){return 4-get.value(card)},
 				ai:{
 					skillTagFilter:function(player){
-						if(!player.countCards('he',{color:'black'})) return false;
+						if(!player.countCards('hme',{color:'black'})) return false;
 					},
 					respondSha:true,
 				},

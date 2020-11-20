@@ -1025,9 +1025,9 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					return get.color(card)=='black';
 				},
 				filter:function(event,player){
-					return player.hasSkill('sgduanliang_sss')&&player.countCards('he',{type:['basic','equip'],color:'black'})
+					return player.hasSkill('sgduanliang_sss')&&player.countCards('hme',{type:['basic','equip'],color:'black'})
 				},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'bingliang'},
 				prompt:'将一黑色的基本牌或装备牌当兵粮寸断使用',
 				check:function(card){return 6-get.value(card)},

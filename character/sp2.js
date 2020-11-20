@@ -774,6 +774,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							audio:'juanhui',
 							popname:true,
 							filterCard:true,
+							position:'hm',
 							viewAs:{
 								name:links[0][2],
 								nature:links[0][3],
@@ -1689,7 +1690,9 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				audio:'mansi',
 				enable:'phaseUse',
 				usable:1,
-				filterCard:true,
+				filterCard:function(card){
+					return get.position(card)=='h';
+				},
 				selectCard:-1,
 				filter:function(event,player){
 					var hs=player.getCards('h');
@@ -2109,12 +2112,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:"phaseUse",
 				filter:function(event,player){
 					if(player.hasJudge('bingliang')) return false;
-					return player.countCards('he',function(card){
+					return player.countCards('hme',function(card){
 						return get.color(card)=='black'&&get.type(card)=='basic';
 					})>0;
 				},
 				viewAs:{name:'bingliang'},
-				position:"he",
+				position:"hme",
 				filterCard:function(card,player,event){
 					return get.color(card)=='black'&&get.type(card)=='basic'&&player.canAddJudge({name:'bingliang',cards:[card]});
 				},
@@ -4896,7 +4899,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					player:'useCardAfter',
 				},
 				filter:function(event,player){
-					if(player.hasSkill('xinfu_sidaoy')||!player.countCards('h')) return false;
+					if(player.hasSkill('xinfu_sidaoy')||!player.countCards('hm')) return false;
 					if(!event.targets||!event.targets.length||!event.isPhaseUsing(player)) return false;
 					var history=player.getHistory('useCard');
 					var index=history.indexOf(event)-1;
@@ -4926,7 +4929,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filterCard:function(card){
 					return get.itemtype(card)=='card';
 				},
-				position:"h",
+				position:"hm",
 				viewAs:{
 					name:"shunshou",
 				},

@@ -631,10 +631,10 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				usable:1,
 				viewAs:{name:'qiankunbiao'},
 				viewAsFilter:function(player){
-					return player.countCards('he',{color:'black'});
+					return player.countCards('hme',{color:'black'});
 				},
 				filterCard:{color:'black'},
-				position:'he',
+				position:'hme',
 				check:function(card){
 					return 7-get.value(card);
 				},
@@ -1778,12 +1778,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				trigger:{global:'judge'},
 				direct:true,
 				filter:function(event,player){
-					return player.countCards('he')>0;
+					return player.countCards('hme')>0;
 				},
 				content:function(){
 					"step 0"
 					player.chooseCard(get.translation(trigger.player)+'的'+(trigger.judgestr||'')+'判定为'+
-					get.translation(trigger.player.judging[0])+'，'+get.prompt('gtiandao'),'he').ai=function(card){
+					get.translation(trigger.player.judging[0])+'，'+get.prompt('gtiandao'),'hme').ai=function(card){
 						var trigger=_status.event.parent._trigger;
 						var player=_status.event.player;
 						var result=trigger.judge(card)-trigger.judge(trigger.player.judging[0]);
@@ -1906,11 +1906,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'phaseUse',
 				filterCard:{color:'black'},
 				selectCard:1,
-				position:'he',
+				position:'hme',
 				usable:1,
 				viewAs:{name:'taoyuan'},
 				filter:function(event,player){
-					return player.countCards('he',{color:'black'})>0;
+					return player.countCards('hme',{color:'black'})>0;
 				},
 				audio:true,
 				prompt:'将一张黑色牌当作桃园结义使用',
@@ -1925,7 +1925,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'phaseUse',
 				usable:1,
 				filter:function(event,player){
-					return player.countCards('h',{suit:['spade','heart']})>0;
+					return player.countCards('hm',{suit:['spade','heart']})>0;
 				},
 				filterCard:{suit:['spade','heart']},
 				viewAs:{name:'fengyinzhidan'},
@@ -1941,10 +1941,10 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filterCard:function(card){
 					return get.color(card)=='red';
 				},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'sha'},
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{color:'red'})) return false;
+					if(!player.countCards('hme',{color:'red'})) return false;
 				},
 				prompt:'将一张红色牌当杀使用',
 				check:function(card){return 5-get.value(card)},
@@ -1955,7 +1955,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					respondSha:true,
 					skillTagFilter:function(player,tag,arg){
 						if(arg!='use') return false;
-						if(!player.countCards('he',{color:'red'})) return false;
+						if(!player.countCards('hme',{color:'red'})) return false;
 					},
 				},
 				group:['huanxia_expire','huanxia_draw','huanxia_gain'],
@@ -2184,13 +2184,13 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				selectCard:2,
 				viewAs:{name:'sha'},
 				viewAsFilter:function(player){
-					if(player.countCards('h',{type:['trick','delay']})<2) return false;
+					if(player.countCards('hm',{type:['trick','delay']})<2) return false;
 				},
 				check:function(){return 1},
 				ai:{
 					skillTagFilter:function(player,tag,arg){
 						if(arg!='use') return false;
-						if(player.countCards('h',{type:['trick','delay']})<2) return false;
+						if(player.countCards('hm',{type:['trick','delay']})<2) return false;
 					},
 					respondSha:true,
 					order:function(){
@@ -2359,7 +2359,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filterCard:true,
 				viewAs:{name:'sha'},
 				filter:function(event,player){
-					var num=player.countCards('h');
+					var num=player.countCards('hm');
 					if(num==0) return false;
 					return num%2==1;
 				},
@@ -2372,7 +2372,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				viewAs:{name:'shan'},
 				filter:function(event,player){
 					if(get.is.altered('yaotong')) return false;
-					var num=player.countCards('h');
+					var num=player.countCards('hm');
 					if(num==0) return false;
 					return num%2==1;
 				},
@@ -2384,12 +2384,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filterCard:true,
 				viewAs:{name:'wuxie'},
 				filter:function(event,player){
-					var num=player.countCards('h');
+					var num=player.countCards('hm');
 					if(num==0) return false;
 					return num%2==0;
 				},
 				viewAsFilter:function(player){
-					var num=player.countCards('h');
+					var num=player.countCards('hm');
 					if(num==0) return false;
 					return num%2==0;
 				},
@@ -2401,12 +2401,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filterCard:true,
 				viewAs:{name:'tao'},
 				filter:function(event,player){
-					var num=player.countCards('h');
+					var num=player.countCards('hm');
 					if(num==0) return false;
 					return num%2==0;
 				},
 				viewAsFilter:function(player){
-					var num=player.countCards('h');
+					var num=player.countCards('hm');
 					if(num==0) return false;
 					return num%2==0;
 				},
@@ -3194,11 +3194,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'chooseToUse',
 				filterCard:true,
 				selectCard:2,
-				position:'he',
+				position:'hme',
 				viewAs:{name:'sha'},
 				prompt:'将两张牌当杀使用',
 				check:function(card){
-					if(_status.event.player.countCards('h')<4) return 6-get.useful(card);
+					if(_status.event.player.countCards('hm')<4) return 6-get.useful(card);
 					return 7-get.useful(card);
 				},
 				ai:{
@@ -3494,7 +3494,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			guiying:{
 				enable:'chooseToUse',
 				filterCard:{color:'black'},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'toulianghuanzhu'},
 				prompt:'将一张黑色牌当作偷梁换柱使用',
 				check:function(card){
@@ -4109,11 +4109,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'phaseUse',
 				filter:function(event,player){
 					if(!lib.card.chiyuxi) return false;
-					return !player.getStat('skill').huangyu&&player.countCards('he',{color:'red'})>1;
+					return !player.getStat('skill').huangyu&&player.countCards('hme',{color:'red'})>1;
 				},
 				filterCard:{color:'red'},
 				selectCard:2,
-				position:'he',
+				position:'hme',
 				viewAs:{name:'chiyuxi',nature:'fire'},
 				check:function(card){
 					var player=_status.event.player;
@@ -5120,15 +5120,15 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			huopu:{
 				enable:'phaseUse',
 				usable:1,
-				position:'he',
+				position:'hme',
 				filterCard:function(card){
 					return get.suit(card)=='heart';
 				},
 				viewAs:{name:'liuxinghuoyu'},
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{suit:'heart'})) return false;
+					if(!player.countCards('hme',{suit:'heart'})) return false;
 				},
-				prompt:'将一张红桃手牌当作流星火羽使用',
+				prompt:'将一张红桃牌当作流星火羽使用',
 				check:function(card){return 6-get.value(card)},
 				ai:{
 					threaten:1.4,
@@ -5167,12 +5167,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					return get.color(card)=='black';
 				},
 				viewAs:{name:'bingpotong'},
-				position:'he',
+				position:'hme',
 				filter:function(event,player){
-					return player.countCards('h',{color:'black'})>0;
+					return player.countCards('hm',{color:'black'})>0;
 				},
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{color:'black'})) return false;
+					if(!player.countCards('hme',{color:'black'})) return false;
 				},
 				prompt:'将一张黑色牌当作冰魄针使用',
 				check:function(card){return 5-get.value(card)},
@@ -5187,7 +5187,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					return true;
 				},
 				selectCard:3,
-				position:'he',
+				position:'hme',
 				prompt:'将三张牌当作惊雷闪使用',
 				check:function(card){
 					return 4-get.value(card);
@@ -6705,7 +6705,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:['chooseToRespond','chooseToUse'],
 				filterCard:{color:'black'},
 				viewAs:{name:'sha'},
-				position:'he',
+				position:'hme',
 				prompt:'将一张黑色牌当杀打出',
 				check:function(card){return 6-get.value(card)}
 			},
@@ -6713,7 +6713,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:['chooseToRespond','chooseToUse'],
 				filterCard:{color:'red'},
 				viewAs:{name:'shan'},
-				position:'he',
+				position:'hme',
 				prompt:'将一张红色牌当闪使用或打出',
 				check:function(card){return 6-get.value(card)}
 			},
@@ -9341,12 +9341,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			wanjun:{
 				enable:'chooseToUse',
 				filter:function(event,player){
-					return player.countCards('he',{type:'equip'})>0;
+					return player.countCards('hme',{type:'equip'})>0;
 				},
 				filterCard:function(card){
 					return get.type(card)=='equip';
 				},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'nanman'},
 				prompt:'将一张装备牌当南蛮入侵使用',
 				check:function(card){
@@ -9638,11 +9638,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'chooseToUse',
 				filterCard:{type:'equip'},
 				filter:function(event,player){
-					return player.countCards('he',{type:'equip'});
+					return player.countCards('hme',{type:'equip'});
 				},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'sha'},
-				prompt:'将一张闪当杀使用或打出',
+				prompt:'将一张装备牌当杀使用或打出',
 				check:function(card){
 					if(get.subtype(card)=='equip1') return 10-get.value(card);
 					return 7-get.equipValue(card);

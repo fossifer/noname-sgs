@@ -803,7 +803,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'phaseUse',
 				usable:1,
 				viewAsFilter:function(player){
-					return player.countCards('h',{suit:'heart'})>0;
+					return player.countCards('hm',{suit:'heart'})>0;
 				},
 				viewAs:{name:'wuzhong'},
 				filterCard:{suit:'heart'},
@@ -1418,7 +1418,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				filterCard:true,
 				viewAs:{name:'shan'},
 				viewAsFilter:function(player){
-					if(!player.countCards('h')) return false;
+					if(!player.countCards('hm')) return false;
 					if(player.countCards('e')) return false;
 				},
 				prompt:'将一张手牌当闪使用或打出',
@@ -1426,7 +1426,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				ai:{
 					respondShan:true,
 					skillTagFilter:function(player){
-						if(!player.countCards('h')) return false;
+						if(!player.countCards('hm')) return false;
 						if(player.countCards('e')) return false;
 					},
 					effect:{

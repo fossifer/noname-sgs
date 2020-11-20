@@ -2238,7 +2238,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 			g_hufu_sha:{
 				enable:['chooseToRespond','chooseToUse'],
 				filter:function(event,player){
-					return player.countCards('h','hufu')>0;
+					return player.countCards('hm','hufu')>0;
 				},
 				filterCard:{name:'hufu'},
 				viewAs:{name:'sha'},
@@ -2253,7 +2253,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 			g_hufu_shan:{
 				enable:['chooseToRespond','chooseToUse'],
 				filter:function(event,player){
-					return player.countCards('h','hufu')>0;
+					return player.countCards('hm','hufu')>0;
 				},
 				filterCard:{name:'hufu'},
 				viewAs:{name:'shan'},
@@ -2268,7 +2268,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 			g_hufu_jiu:{
 				enable:['chooseToRespond','chooseToUse'],
 				filter:function(event,player){
-					return player.countCards('h','hufu')>0;
+					return player.countCards('hm','hufu')>0;
 				},
 				filterCard:{name:'hufu'},
 				viewAs:{name:'jiu'},

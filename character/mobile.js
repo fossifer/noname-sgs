@@ -3525,7 +3525,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						event.filterCard({name:'tao'},player,event)){
 						return player.hasCard(function(card){
 							return get.type(card)=='basic';
-						},'h');
+						},'hm');
 					}
 					return false;
 				},
@@ -3554,7 +3554,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							switch(button.link[2]){
 								case 'tao':return 5;
 								case 'jiu':{
-									if(player.countCards('h',{type:'basic'})>=2) return 3;
+									if(player.countCards('hm',{type:'basic'})>=2) return 3;
 								};
 								case 'sha':
 									if(button.link[3]=='fire') return 2.95;
@@ -3574,7 +3574,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 								return 9-get.value(card);
 							},
 							viewAs:{name:links[0][2],nature:links[0][3]},
-							position:'he',
+							position:'hme',
 							popname:true,
 						}
 					},
@@ -4348,11 +4348,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				complexCard:true,
 				viewAsFilter:function(player){
 					if(!player.storage.yizan){
-						if(player.countCards('h')<2) return false;
+						if(player.countCards('hm')<2) return false;
 					}
 					return player.hasCard(function(card){
 						return get.type(card)=='basic';
-					},'h');
+					},'hm');
 				},
 				prompt:function(){
 					var player=_status.event.player;
@@ -4366,11 +4366,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				ai:{
 					skillTagFilter:function(player){
 						if(!player.storage.yizan){
-							if(player.countCards('he')<2) return false;
+							if(player.countCards('hme')<2) return false;
 						}
 						return player.hasCard(function(card){
 							return get.type(card)=='basic';
-						},'h');
+						},'hm');
 					},
 					respondSha:true,
 				},
@@ -4393,7 +4393,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						event.filterCard({name:'tao'},player,event)){
 						return player.hasCard(function(card){
 							return get.type(card)=='basic';
-						},'h');
+						},'hm');
 					}
 					return false;
 				},
@@ -4422,7 +4422,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							switch(button.link[2]){
 								case 'tao':return 5;
 								case 'jiu':{
-									if(player.storage.yizan&&player.countCards('h',{type:'basic'})>2) return 3;
+									if(player.storage.yizan&&player.countCards('hm',{type:'basic'})>2) return 3;
 								};
 								case 'sha':
 									if(button.link[3]=='fire') return 2.95;
@@ -4453,7 +4453,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 								else return 6-get.value(card);
 							},
 							viewAs:{name:links[0][2],nature:links[0][3]},
-							position:'he',
+							position:'hme',
 							popname:true,
 							precontent:function(){
 								player.logSkill('yizan_respond_shan');
@@ -4511,7 +4511,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					if(player.storage.yizan) return 1;
 					return 2;
 				},
-				position:"he",
+				position:"hme",
 				viewAs:{
 					name:"shan",
 				},
@@ -4521,7 +4521,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					}
 					return player.hasCard(function(card){
 						return get.type(card)=='basic';
-					},'h');
+					},'hm');
 				},
 				prompt:function(){
 					var player=_status.event.player;
@@ -4536,11 +4536,11 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					respondShan:true,
 					skillTagFilter:function(player){
 					if(!player.storage.yizan){
-						if(player.countCards('he')<2) return false;
+						if(player.countCards('hme')<2) return false;
 					}
 					return player.hasCard(function(card){
 						return get.type(card)=='basic';
-					},'h');
+					},'hm');
 				},
 					effect:{
 						target:function(card,player,target,current){

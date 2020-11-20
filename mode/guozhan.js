@@ -2008,7 +2008,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							name:"sha",
 						},
 						viewAsFilter:function (player){
-							if(!player.countCards('h','shan')) return false;
+							if(!player.countCards('hm','shan')) return false;
 						},
 						prompt:"将一张闪当杀使用或打出",
 						check:function (){return 1},
@@ -2020,7 +2020,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							},
 							respondSha:true,
 							skillTagFilter:function (player){
-								if(!player.countCards('h','shan')) return false;
+								if(!player.countCards('hm','shan')) return false;
 							},
 							order:function (){
 								return get.order({name:'sha'})+0.1;
@@ -2040,12 +2040,12 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						prompt:"将一张杀当闪使用或打出",
 						check:function (){return 1},
 						viewAsFilter:function (player){
-							if(!player.countCards('h','sha')) return false;
+							if(!player.countCards('hm','sha')) return false;
 						},
 						ai:{
 							respondShan:true,
 							skillTagFilter:function (player){
-								if(!player.countCards('h','sha')) return false;
+								if(!player.countCards('hm','sha')) return false;
 							},
 							effect:{
 								target:function (card,player,target,current){
@@ -2166,9 +2166,9 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				},
 				filter:function (event,player){
 					if(player.hasSkill('new_duanliang_off')) return false;
-					return player.countCards('he',{type:['basic','equip'],color:'black'})
+					return player.countCards('hme',{type:['basic','equip'],color:'black'})
 				},
-				position:"he",
+				position:"hme",
 				viewAs:{
 					name:"bingliang",
 				},
@@ -2187,7 +2187,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					result:{
 						target:function (player,target){
 							if(target.hasJudge('caomu')) return 0;
-							return -1.5/Math.sqrt(target.countCards('h')+1);
+							return -1.5/Math.sqrt(target.countCards('hm')+1);
 						},
 					},
 					tag:{
@@ -2674,7 +2674,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							name:"sha",
 						},
 						viewAsFilter:function (player){
-							if(!player.countCards('h','shan')) return false;
+							if(!player.countCards('hm','shan')) return false;
 						},
 						prompt:"将一张闪当杀使用或打出",
 						check:function (){return 1},
@@ -2686,7 +2686,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							},
 							respondSha:true,
 							skillTagFilter:function (player){
-								if(!player.countCards('h','shan')) return false;
+								if(!player.countCards('hm','shan')) return false;
 							},
 							order:function (){
 								return get.order({name:'sha'})+0.1;
@@ -2706,12 +2706,12 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						prompt:"将一张杀当闪使用或打出",
 						check:function (){return 1},
 						viewAsFilter:function (player){
-							if(!player.countCards('h','sha')) return false;
+							if(!player.countCards('hm','sha')) return false;
 						},
 						ai:{
 							respondShan:true,
 							skillTagFilter:function (player){
-								if(!player.countCards('h','sha')) return false;
+								if(!player.countCards('hm','sha')) return false;
 							},
 							effect:{
 								target:function (card,player,target,current){
@@ -3314,7 +3314,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				audio:'bmcanshi',
 				enable:"phaseUse",
 				filter:function (event,player){
-					return player.countCards('h',{suit:'spade'})>0;
+					return player.countCards('hm',{suit:'spade'})>0;
 				},
 				init:function (player){
 					if(!player.storage.hmkguishu) player.storage.hmkguishu=0;
@@ -3339,7 +3339,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							return 3;
 						}
 						if(button.link=='zhibi'){
-							if(player.countCards('h',{suit:'spade'})>2) return 1;
+							if(player.countCards('hm',{suit:'spade'})>2) return 1;
 							return 0;
 						}
 					},
@@ -3349,7 +3349,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							filterCard:function (card,player){
 								return get.suit(card)=='spade';
 							},
-							position:"h",
+							position:"hm",
 							selectCard:1,
 							popname:true,
 							ai:function(card){
@@ -4485,6 +4485,9 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 									select[1]=nh;
 								}
 								return select;
+							},
+							filterCard:function(card){
+								return get.position(card)=='h';
 							},
 							filterTarget:function(card,player,target){
 								var info=get.info(card);
@@ -6288,7 +6291,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				usable:4,
 				filterCard:{color:'red'},
 				viewAsFilter:function(player){
-					return player.countCards('h',{color:'red'})>0;
+					return player.countCards('hm',{color:'red'})>0;
 				},
 				check:function(card){
 					return 5-get.value(card);

@@ -426,9 +426,9 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				usable:1,
 				viewAs:{name:'feibiao'},
 				filterCard:{suit:'club'},
-				position:'he',
+				position:'hme',
 				filter:function(event,player){
-					return player.countCards('he',{suit:'club'});
+					return player.countCards('hme',{suit:'club'});
 				},
 				check:function(card){
 					return 7-get.value(card);
@@ -1138,10 +1138,10 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			zuiji:{
 				enable:'phaseUse',
 				filterCard:true,
-				position:'he',
+				position:'hme',
 				viewAs:{name:'jiu'},
 				viewAsFilter:function(player){
-					if(!player.countCards('he')) return false;
+					if(!player.countCards('hme')) return false;
 				},
 				prompt:'将一张手牌或装备牌当酒使用',
 				check:function(card){
@@ -2157,17 +2157,17 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			yanjia_old:{
 				enable:'chooseToUse',
 				filter:function(event,player){
-					return player.countCards('he',{type:'equip'})>0;
+					return player.countCards('hme',{type:'equip'})>0;
 				},
 				filterCard:function(card){
 					return get.type(card)=='equip';
 				},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'wuzhong'},
 				prompt:'将一张装备牌当无中生有使用',
 				check:function(card){
 					var player=_status.currentPhase;
-					if(player.countCards('he',{subtype:get.subtype(card)})>1){
+					if(player.countCards('hme',{subtype:get.subtype(card)})>1){
 						return 11-get.equipValue(card);
 					}
 					if(player.countCards('h')<player.hp){

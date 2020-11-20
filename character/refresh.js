@@ -1189,7 +1189,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						var map={sha:'shan',tao:'jiu',jiu:'tao'}
 						for(var i=0;i<list.length;i++){
 							var name=list[i];
-							if(player.countCards('h',map[name])>(name=='jiu'?1:0)&&player.getUseValue({name:name})>0){
+							if(player.countCards('hm',map[name])>(name=='jiu'?1:0)&&player.getUseValue({name:name})>0){
 								var temp=get.order({name:name});
 								if(temp>max){
 									max=temp;
@@ -1214,10 +1214,10 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				filter:function(event,player){
 					var filter=event.filterCard;
-					if(filter({name:'sha'},player,event)&&player.countCards('h','shan')) return true;
-					if(filter({name:'shan'},player,event)&&player.countCards('h','sha')) return true;
-					if(filter({name:'tao'},player,event)&&player.countCards('h','jiu')) return true;
-					if(filter({name:'jiu'},player,event)&&player.countCards('h','tao')) return true;
+					if(filter({name:'sha'},player,event)&&player.countCards('hm','shan')) return true;
+					if(filter({name:'shan'},player,event)&&player.countCards('hm','sha')) return true;
+					if(filter({name:'tao'},player,event)&&player.countCards('hm','jiu')) return true;
+					if(filter({name:'jiu'},player,event)&&player.countCards('hm','tao')) return true;
 					return false;
 				},
 				ai:{
@@ -1231,7 +1231,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							case 'respondShan':name='sha';break;
 							case 'save':name='jiu';break;
 						}
-						if(!player.countCards('h',name)) return false;
+						if(!player.countCards('hm',name)) return false;
 					},
 					order:function(item,player){
 						if(player&&_status.event.type=='phase'){
@@ -1240,7 +1240,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							var map={sha:'shan',tao:'jiu',jiu:'tao'}
 							for(var i=0;i<list.length;i++){
 								var name=list[i];
-								if(player.countCards('h',map[name])>(name=='jiu'?1:0)&&player.getUseValue({name:name})>0){
+								if(player.countCards('hm',map[name])>(name=='jiu'?1:0)&&player.getUseValue({name:name})>0){
 									var temp=get.order({name:name});
 									if(temp>max) max=temp;
 								}
@@ -3391,7 +3391,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				derivation:'rechanyuan',
 				enable:'chooseToUse',
 				filter:function(event,player){
-					return player.countCards('h')>0&&!player.hasSkill('reguhuo_phase')&&
+					return player.countCards('hm')>0&&!player.hasSkill('reguhuo_phase')&&
 					event.type!='respondShan'&&event.type!='wuxie';
 				},
 				chooseButton:{
@@ -3421,7 +3421,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						var val=player.getUseValue(card);
 						if(val<=0) return 0;
 						if(hasEnemy){
-							if(!player.countCards('h',function(cardx){
+							if(!player.countCards('hm',function(cardx){
 								if(card.name==cardx.name){
 									if(card.name!='sha') return true;
 									return get.nature(card)==get.nature(cardx);
@@ -3453,7 +3453,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 								return 6-get.value(card);
 							},
 							filterCard:true,
-							position:'h',
+							position:'hm',
 						}
 					},
 					prompt:function(links){
@@ -3482,7 +3482,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					number:null,
 				},
 				viewAsFilter:function(player){
-					return player.countCards('h')&&!player.hasSkill('reguhuo_phase');
+					return player.countCards('hm')&&!player.hasSkill('reguhuo_phase');
 				},
 				check:function(card){
 					var player=_status.event.player;
@@ -3511,7 +3511,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					number:null,
 				},
 				viewAsFilter:function(player){
-					return player.countCards('h')&&!player.hasSkill('reguhuo_phase');
+					return player.countCards('hm')&&!player.hasSkill('reguhuo_phase');
 				},
 				check:function(card){
 					var player=_status.event.player;
@@ -3552,7 +3552,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					return 6-get.value(card);
 				},
 				viewAsFilter:function(player){
-					return player.countCards('h')&&!player.hasSkill('reguhuo_phase');
+					return player.countCards('hm')&&!player.hasSkill('reguhuo_phase');
 				},
 				filterCard:true,
 				prompt:'将一张牌当做【无懈可击】使用',
@@ -3847,13 +3847,13 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				audio:2,
 				trigger:{global:'judge'},
 				filter:function(event,player){
-					return player.countCards('he',{color:'black'})>0;
+					return player.countCards('hme',{color:'black'})>0;
 				},
 				direct:true,
 				content:function(){
 					"step 0"
 					player.chooseCard(get.translation(trigger.player)+'的'+(trigger.judgestr||'')+'判定为'+
-					get.translation(trigger.player.judging[0])+'，'+get.prompt('xinguidao'),'he',function(card){
+					get.translation(trigger.player.judging[0])+'，'+get.prompt('xinguidao'),'hme',function(card){
 						if(get.color(card)!='black') return false;
 						var player=_status.event.player;
 						var mod2=game.checkMod(card,player,'unchanged','cardEnabled2',player);
@@ -3920,14 +3920,14 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				position:'he',
 				viewAs:{name:'shan'},
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{color:'black'})) return false;
+					if(!player.countCards('hme',{color:'black'})) return false;
 				},
 				prompt:'将一张黑色牌当闪打出',
 				check:function(){return 1},
 				ai:{
 					respondShan:true,
 					skillTagFilter:function(player){
-						if(!player.countCards('he',{color:'black'})) return false;
+						if(!player.countCards('hme',{color:'black'})) return false;
 					},
 					effect:{
 						target:function(card,player,target,current){
@@ -3995,7 +3995,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					nature:"fire",
 				},
 				viewAsFilter:function (player){
-					if(!player.countCards('he',{color:'red'})) return false;
+					if(!player.countCards('hme',{color:'red'})) return false;
 				},
 				prompt:"将一张红色牌当火攻使用",
 				check:function (card){
@@ -4015,7 +4015,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					return get.color(card)=='black';
 				},
 				viewAsFilter:function (player){
-					return player.countCards('he',{color:'black'})>0;
+					return player.countCards('hme',{color:'black'})>0;
 				},
 				viewAs:{
 					name:"wuxie",
@@ -4495,10 +4495,10 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				viewAsFilter:function (player){
 					if(get.zhu(player,'shouyue')){
-						if(!player.countCards('he')) return false;
+						if(!player.countCards('hme')) return false;
 					}
 					else{
-						if(!player.countCards('he',{color:'red'})) return false;
+						if(!player.countCards('hme',{color:'red'})) return false;
 					}
 				},
 				prompt:"将一张红色牌当杀使用或打出",
@@ -4509,7 +4509,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 							if(!player.countCards('he')) return false;
 						}
 						else{
-							if(!player.countCards('he',{color:'red'})) return false;
+							if(!player.countCards('hme',{color:'red'})) return false;
 						}
 					},
 					respondSha:true,
@@ -5722,12 +5722,12 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				trigger:{global:'judge'},
 				direct:true,
 				filter:function(event,player){
-					return player.countCards('he')>0;
+					return player.countCards('hme')>0;
 				},
 				content:function(){
 					"step 0"
 					player.chooseCard(get.translation(trigger.player)+'的'+(trigger.judgestr||'')+'判定为'+
-					get.translation(trigger.player.judging[0])+'，'+get.prompt('reguicai'),'he',function(card){
+					get.translation(trigger.player.judging[0])+'，'+get.prompt('reguicai'),'hme',function(card){
 						var player=_status.event.player;
 						var mod2=game.checkMod(card,player,'unchanged','cardEnabled2',player);
 						if(mod2!='unchanged') return mod2;
@@ -7395,7 +7395,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				viewAs:{name:'jiu'},
 				viewAsFilter:function(player){
-					if(!player.countCards('h',{suit:'spade'})) return false;
+					if(!player.countCards('hm',{suit:'spade'})) return false;
 					return true;
 				},
 				prompt:'将一张黑桃手牌当酒使用',
@@ -7403,7 +7403,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					if(player&&player==cardx.player) return true;
 					if(_status.event.type=='dying') return 1;
 					var player=_status.event.player;
-					var shas=player.getCards('h',function(card){
+					var shas=player.getCards('hm',function(card){
 						return card!=cardx&&get.name(card,player)=='sha';
 					});
 					if(!shas.length) return -1;
@@ -7425,7 +7425,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						if(game.hasPlayer(function(current){
 							return (get.attitude(player,current)<0&&
 							!current.hasShan()
-							&&current.hp+current.countCards('h',{name:['tao','jiu']})>1+(player.storage.jiu||0)
+							&&current.hp+current.countCards('hm',{name:['tao','jiu']})>1+(player.storage.jiu||0)
 							&&player.canUse(card,current,true,true)&&
 							!current.hasSkillTag('filterDamage',null,{
 								player:player,
@@ -7441,7 +7441,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				ai:{
 					skillTagFilter:function(player){
-						return player.countCards('h',{suit:'spade'})>0&&player.hp<=0;
+						return player.countCards('hm',{suit:'spade'})>0&&player.hp<=0;
 					},
 					threaten:1.5,
 					save:true,
@@ -7450,7 +7450,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				locked:true,
 				direct:true,
 				filter:function(event,player){
-					if(event.name=='chooseToUse') return player.countCards('h',{suit:'spade'})>0;
+					if(event.name=='chooseToUse') return player.countCards('hm',{suit:'spade'})>0;
 					return event.card&&event.card.name=='sha'&&event.getParent(2).jiu==true&&!player.hasSkill('oljiuchi_air');
 				},
 				content:function(){

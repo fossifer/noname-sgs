@@ -5922,7 +5922,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				filterCard:function(card){
 					return get.color(card)=='red';
 				},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'tao'},
 				prompt:'将一张红色牌当桃使用',
 				check:function(card){return 8-get.value(card)},
@@ -5931,7 +5931,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					skillTagFilter:function(player){
 						var event=_status.event;
 						if(event.dying&&event.dying.hasSkill('boss_furan')&&player.isEnemyOf(event.dying)){
-							return player.countCards('he',{color:'red'})>0&&_status.currentPhase!=player;
+							return player.countCards('hme',{color:'red'})>0&&_status.currentPhase!=player;
 						}
 						else{
 							return false;

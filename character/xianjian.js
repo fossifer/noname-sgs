@@ -1789,9 +1789,9 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				enable:'phaseUse',
 				viewAs:{name:'sha',nature:'fire'},
 				usable:1,
-				position:'he',
+				position:'hme',
 				viewAsFilter:function(player){
-					if(!player.countCards('he',{color:'red'})) return false;
+					if(!player.countCards('hme',{color:'red'})) return false;
 				},
 				filterCard:{color:'red'},
 				check:function(card){
@@ -1938,7 +1938,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				viewAs:{name:'wanjian'},
 				filterCard:{name:'sha'},
 				filter:function(event,player){
-					return player.countCards('h','sha')>0;
+					return player.countCards('hm','sha')>0;
 				},
 				// alter:true,
 				usable:1,
@@ -2897,7 +2897,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					effect:{
 						player:function(card,player){
 							if(_status.currentPhase!=player) return;
-							if(card.name=='sha'&&player.countCards('h','sha')<2&&!player.needsToDiscard()){
+							if(card.name=='sha'&&player.countCards('hm','sha')<2&&!player.needsToDiscard()){
 								var num=0;
 								var player=_status.event.player;
 								var players=game.filterPlayer();
@@ -3969,13 +3969,13 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					return get.suit(card)=='club';
 				},
 				filter:function(event,player){
-					return player.countCards('h',{suit:'club'});
+					return player.countCards('hm',{suit:'club'});
 				},
 				viewAs:{name:'shunshou'},
 				viewAsFilter:function(player){
-					if(!player.countCards('h',{suit:'club'})) return false;
+					if(!player.countCards('hm',{suit:'club'})) return false;
 				},
-				prompt:'将一张装备牌当顺手牵羊使用',
+				prompt:'将一张梅花牌当顺手牵羊使用',
 				check:function(card){
 					var player=_status.currentPhase;
 					if(player.countCards('h',{subtype:get.subtype(card)})>1){
@@ -3999,15 +3999,15 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			tuoqiao:{
 				enable:'chooseToUse',
 				filterCard:{color:'black'},
-				position:'he',
+				position:'hme',
 				viewAs:{name:'shihuifen'},
 				viewAsFilter:function(player){
-					return player.countCards('he',{color:'black'})>0;
+					return player.countCards('hme',{color:'black'})>0;
 				},
 				ai:{
 					shihuifen:true,
 					skillTagFilter:function(player){
-						return player.countCards('he',{color:'black'})>0;
+						return player.countCards('hme',{color:'black'})>0;
 					}
 				}
 			},
