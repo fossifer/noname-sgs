@@ -2723,7 +2723,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						if(card) cards.push(card);
 						else{
 							var card=get.cardPile(function(x){
-								return !cards.contains(card);
+								return !cards.contains(x);
 							});
 							if(card) cards.push(card);
 						}
