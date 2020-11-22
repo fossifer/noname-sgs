@@ -38,6 +38,40 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					}
 				}
 			},
+			muniu_new:{
+				fullskin:true,
+				type:'equip',
+				subtype:'equip5',
+				nomod:true,
+				onEquip:function(){
+					player.markSkill('muniu_new_skill6');
+				},
+				forceDie:true,
+				onLose:function(){
+					player.unmarkSkill('muniu_new_skill6');
+					delete player.getStat('skill').muniu_new_skill;
+					if((event.getParent(2)&&event.getParent(2).name!='swapEquip')&&event.parent.type!='equip'&&card&&card.cards&&card.cards.length){
+						player.$throw(card.cards,1000);
+						player.popup('muniu_new');
+						game.log(card,'掉落了',card.cards);
+						game.cardsDiscard(card.cards);
+						card.cards.length=0;
+					}
+				},
+				clearLose:true,
+				equipDelay:false,
+				loseDelay:false,
+				skills:['muniu_new_skill','muniu_new_skill2','muniu_new_skill6','muniu_new_skill7'],
+				ai:{
+					equipValue:function(card){
+						if(card.card) return 7+card.card.length;
+						return 7;
+					},
+					basic:{
+						equipValue:7
+					}
+				}
+			},
 			jiu:{
 				audio:true,
 				fullskin:true,
@@ -757,6 +791,306 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					player.updateMarks();
 				},
 			},
+			muniu_new_skill:{
+				equipSkill:true,
+				enable:'phaseUse',
+				usable:1,
+				filterCard:true,
+				check:function(card){
+					if(card.name=='du') return 20;
+					var player=_status.event.player;
+					var nh=player.countCards('h');
+					if(!player.needsToDiscard()){
+						if(nh<3) return 0;
+						if(nh==3) return 5-get.value(card);
+						return 7-get.value(card);
+					}
+					return 10-get.useful(card);
+				},
+				discard:false,
+				lose:true,
+				toStorage:true,
+				sync:function(muniu){
+					if(game.online){
+						return;
+					}
+					if(!muniu.cards){
+						muniu.cards=[];
+					}
+					for(var i=0;i<muniu.cards.length;i++){
+						if(!muniu.cards[i].parentNode||muniu.cards[i].parentNode.id!='special'){
+							muniu.cards.splice(i--,1);
+						}
+					}
+					game.broadcast(function(muniu,cards){
+						muniu.cards=cards;
+					},muniu,muniu.cards);
+				},
+				filter:function(event,player){
+					var muniu=player.getEquip(5);
+					if(muniu&&muniu.cards&&muniu.cards.length>=5) return false;
+					return player.countCards('h')>0;
+				},
+				prepare:function(cards,player){
+					player.$give(1,player,false);
+				},
+				content:function(){
+					"step 0"
+					for(var i=0;i<cards.length;i++){
+						if(!cards[i].destroyed){
+							ui.special.appendChild(cards[i]);
+						}
+						else{
+							cards[i].remove();
+							cards.splice(i--,1);
+						}
+					}
+					var muniu=player.getEquip(5);
+					if(!muniu||!cards.length){
+						for(var i=0;i<cards.length;i++){
+							cards[i].discard();
+						}
+						event.finish();
+						return;
+					}
+					if(muniu.cards==undefined) muniu.cards=[];
+					muniu.cards.push(cards[0]);
+					game.broadcast(function(muniu,cards){
+						muniu.cards=cards;
+					},muniu,muniu.cards);
+					var players=game.filterPlayer(function(current){
+						if(!current.getEquip(5)&&current!=player&&!current.isTurnedOver()&&
+							get.attitude(player,current)>=3&&get.attitude(current,player)>=3){
+							return true;
+						}
+					});
+					players.sort(lib.sort.seat);
+					var choice=players[0];
+					var next=player.chooseTarget('是否移动木牛流马？',function(card,player,target){
+						return !target.isMin()&&player!=target&&target.isEmpty(5);
+					});
+					next.set('ai',function(target){
+						return target==_status.event.choice?1:-1;
+					});
+					next.set('choice',choice);
+					"step 1"
+					if(result.bool){
+						var card=player.getEquip(5);
+						result.targets[0].equip(card);
+						player.$give(card,result.targets[0]);
+						player.line(result.targets,'green');
+						game.delay();
+					}
+					else{
+						player.updateMarks();
+					}
+				},
+				ai:{
+					save:true,
+					respondSha:true,
+					respondShan:true,
+					skillTagFilter:function(player,tag){
+						var muniu=player.getEquip(5);
+						if(!muniu||!muniu.cards) return false;
+						for(var i=0;i<muniu.cards.length;i++){
+							switch(tag){
+								case 'respondSha':if(muniu.cards[i].name=='sha') return true;break;
+								case 'respondShan':if(muniu.cards[i].name=='shan') return true;break;
+								case 'save':{
+									if(muniu.cards[i].name=='tao'||muniu.cards[i].name=='spell_zhiliaoshui') return true;
+									if(player==_status.event.dying){
+										if(muniu.cards[i].name=='jiu'||muniu.cards[i].name=='tianxianjiu') return true;
+									}
+									break;
+								}
+							}
+						}
+						return false;
+					},
+					order:1,
+					expose:0.1,
+					result:{
+						player:1
+					}
+				}
+			},
+			muniu_new_skill2:{
+				group:['muniu_new_skill3','muniu_new_skill4']
+			},
+			muniu_new_skill3:{
+				trigger:{player:'chooseToRespondBegin'},
+				cardSkill:true,
+				filter:function(event,player){
+					if(event.responded) return false;
+					var muniu=player.getEquip(5);
+					if(!muniu.cards) return false;
+					lib.skill.muniu_new_skill.sync(muniu);
+					for(var i=0;i<muniu.cards.length;i++){
+						if(event.filterCard(muniu.cards[i],player,event)&&lib.filter.cardRespondable(muniu.cards[i],player,event)) return true;
+					}
+					return false;
+				},
+				direct:true,
+				content:function(){
+					"step 0"
+					player.chooseButton(['木牛流马',player.getEquip(5).cards]).set('filterButton',function(button){
+						var evt=_status.event.getTrigger();
+						if(evt&&evt.filterCard){
+							return evt.filterCard(button.link,_status.event.player,evt)&&lib.filter.cardRespondable(button.link,_status.event.player,evt);
+						}
+						return true;
+					}).set('ai',function(button){
+						var evt=_status.event.getTrigger();
+						if(evt&&evt.ai){
+							var tmp=_status.event;
+							_status.event=evt;
+							var result=evt.ai(button.link,_status.event.player,evt);
+							_status.event=tmp;
+							return result;
+						}
+						return 1;
+					});
+					"step 1"
+					if(result.bool){
+						trigger.untrigger();
+						trigger.responded=true;
+						trigger.result={bool:true,card:result.links[0],cards:result.links.slice(0)};
+					}
+				},
+				ai:{
+					order:4,
+					useful:-1,
+					value:-1
+				}
+			},
+			muniu_new_skill4:{
+				enable:'chooseToUse',
+				filter:function(event,player){
+					var muniu=player.getEquip(5);
+					if(!muniu.cards) return false;
+					lib.skill.muniu_new_skill.sync(muniu);
+					for(var i=0;i<muniu.cards.length;i++){
+						if(event.filterCard(muniu.cards[i],player,event)) return true;
+					}
+					return false;
+				},
+				chooseButton:{
+					dialog:function(event,player){
+						return ui.create.dialog('木牛流马',player.getEquip(5).cards,'hidden');
+					},
+					filter:function(button,player){
+						var evt=_status.event.getParent();
+						if(evt&&evt.filterCard){
+							return evt.filterCard(button.link,player,evt);
+						}
+						return true;
+					},
+					check:function(button){
+						if(_status.event.getParent().type!='phase') return 1;
+						if(button.link.name=='du') return 10;
+						var player=_status.event.player;
+						if(player.getUseValue(button.link)>0) return get.order(button.link);
+						return -1;
+					},
+					backup:function(links,player){
+						return {
+							filterCard:function(){return false},
+							selectCard:-1,
+							viewAs:links[0],
+							precontent:function(){
+								delete event.result.skill;
+							},
+						};
+					},
+					prompt:function(links){
+						return '选择'+get.translation(links)+'的目标';
+					},
+				},
+				ai:{
+					order:function(item,player){
+						var event=_status.event;
+						if(event.type!='phase') return 4;
+						if(!player) return -1;
+						var muniu=player.getEquip('muniu');
+						if(!muniu||!muniu.cards) return -1;
+						var order=0;
+						for(var i=0;i<muniu.cards.length;i++){
+							if(player.getUseValue(muniu.cards[i])>0){
+								var order2=get.order(muniu.cards[i]);
+								if(order2>order) order=order2
+							}
+						}
+						return order+0.1;
+					},
+					result:{
+						player:function(player){
+							if(_status.event.dying) return get.attitude(player,_status.event.dying);
+							return 1;
+						}
+					},
+					useful:-1,
+					value:-1
+				}
+			},
+			muniu_new_skill6:{
+				mark:true,
+				intro:{
+					content:function(storage,player){
+						var muniu=player.getEquip(5);
+						if(!muniu||!muniu.cards||!muniu.cards.length) return '共有〇张牌';
+						if(player.isUnderControl(true)){
+							return get.translation(muniu.cards);
+						}
+						else{
+							return '共有'+get.cnNumber(muniu.cards.length)+'张牌';
+						}
+					},
+					mark:function(dialog,storage,player){
+						var muniu=player.getEquip(5);
+						if(!muniu||!muniu.cards||!muniu.cards.length) return '共有〇张牌';
+						if(player.isUnderControl(true)){
+							dialog.addAuto(muniu.cards);
+						}
+						else{
+							return '共有'+get.cnNumber(muniu.cards.length)+'张牌';
+						}
+					},
+					markcount:function(storage,player){
+						var muniu=player.getEquip(5);
+						if(muniu&&muniu.cards) return muniu.cards.length;
+						return 0;
+					}
+				}
+			},
+			muniu_new_skill7:{
+				hiddenCard:function(player,name){
+					var muniu=player.getEquip(5);
+					if(!muniu.cards) return false;
+					lib.skill.muniu_new_skill.sync(muniu);
+					for(var i=0;i<muniu.cards.length;i++){
+						if(muniu.cards[i].name==name) return true;
+					}
+					return false;
+				},
+				trigger:{global:'cardsGotoOrderingEnd'},
+				silent:true,
+				firstDo:true,
+				filter:function(event,player){
+					var muniu=player.getEquip('muniu_new');
+					if(!muniu||!muniu.cards) return false;
+					return event.cards&&event.cards.filter(function(card){
+						return muniu.cards.contains(card);
+					}).length>0;
+				},
+				content:function(){
+					var muniu=player.getEquip(5);
+					if(muniu&&muniu.cards){
+						muniu.cards.remove(trigger.cards);
+						lib.skill.muniu_new_skill.sync(muniu);
+					}
+					player.updateMarks();
+				},
+			},
 			huogong2:{},
 			jiu:{
 				trigger:{player:'useCard1'},
@@ -1054,6 +1388,18 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 			muniu_skill4_backup:'流马',
 			muniu_info:'出牌阶段限一次，你可以将一张手牌扣置于你装备区里的【木牛流马】下，若如此做，你可以将此装备移动到一名其他角色的装备区里；你可以将此装备牌下的牌如手牌般使用或打出。',
 			muniu_skill_info:'出牌阶段限一次，你可以将一张手牌扣置于你装备区里的【木牛流马】下，若如此做，你可以将此装备移动到一名其他角色的装备区里；你可以将此装备牌下的牌如手牌般使用或打出。',
+
+			muniu_new:'木牛流马',
+			muniu_new_bg:'牛',
+			muniu_new_skill:'木牛',
+			muniu_new_skill2:'流马',
+			muniu_new_skill3:'流马',
+			muniu_new_skill4:'流马',
+			muniu_new_skill6:'木牛流马',
+			muniu_new_skill6_bg:'辎',
+			muniu_new_skill4_backup:'流马',
+			muniu_new_info:'出牌阶段限一次，若你装备区里的【木牛流马】下的牌不超过四张，你可以将一张手牌扣置于此装备下，若如此做，你可以将此装备移动到一名其他角色的装备区里；你可以将此装备牌下的牌如手牌般使用或打出。',
+			muniu_new_skill_info:'出牌阶段限一次，若你装备区里的【木牛流马】下的牌不超过四张，你可以将一张手牌扣置于此装备下，若如此做，你可以将此装备移动到一名其他角色的装备区里；你可以将此装备牌下的牌如手牌般使用或打出。',
 		},
 		list:[
 			["heart",4,"sha","fire"],
@@ -1112,6 +1458,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 			["club",4,"bingliang"],
 			
 			['diamond',5,'muniu'],
+			['diamond',5,'muniu_new'],
 		],
 	}
 });
