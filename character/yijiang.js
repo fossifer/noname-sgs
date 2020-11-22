@@ -5233,7 +5233,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			jinjiu:{
 				mod:{
 					cardname:function(card,player){
-						if(card.name=='jiu') return 'sha';
+						if(card.name=='jiu'&&!card.classList.contains('muniu_handcard')) return 'sha';
 					},
 				},
 				ai:{
@@ -6680,7 +6680,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			shizhi:{
 				mod:{
 					cardname:function(card,player,name){
-						if(card.name=='shan'&&player.hp==1) return 'sha';
+						if(card.name=='shan'&&player.hp==1&&!card.classList.contains('muniu_handcard')) return 'sha';
 					},
 				},
 				ai:{

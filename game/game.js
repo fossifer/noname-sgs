@@ -49919,6 +49919,7 @@
 			return num;
 		},
 		owner:function(card,method){
+			if(card.classList&&card.classList.contains('muniu_handcard')) return;
 			for(var i=0;i<game.players.length;i++){
 				if(game.players[i].getCards('hej').contains(card)) return game.players[i];
 				if(game.players[i].judging[0]==card&&method!='judge') return game.players[i];

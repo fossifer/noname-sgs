@@ -4809,14 +4809,14 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			yui_lieyin0:{
 				mod:{
 					cardname:function(card){
-						if(get.color(card)=='red') return 'sha';
+						if(get.color(card)=='red'&&!card.classList.contains('muniu_handcard')) return 'sha';
 					},
 				},
 			},
 			yui_lieyin1:{
 				mod:{
 					cardname:function(card){
-						if(card.name=='sha') return 'juedou';
+						if(card.name=='sha'&&!card.classList.contains('muniu_handcard')) return 'juedou';
 					},
 				},
 			},
@@ -5609,7 +5609,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			haruko_haofang:{
 				mod:{
 					cardname:function(card,player,name){
-						if(lib.card[card.name].type=='delay') return 'wuzhong';
+						if(lib.card[card.name].type=='delay'&&!card.classList.contains('muniu_handcard')) return 'wuzhong';
 					},
 				},
 				trigger:{player:'drawBefore'},

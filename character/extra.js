@@ -1563,13 +1563,13 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			wushen:{
 				mod:{
 					cardname:function(card,player,name){
-						if(get.suit(card)=='heart') return 'sha';
+						if(get.suit(card)=='heart'&&!card.classList.contains('muniu_handcard')) return 'sha';
 					},
 					cardnature:function(card,player){
-						if(get.suit(card)=='heart') return false;
+						if(get.suit(card)=='heart'&&!card.classList.contains('muniu_handcard')) return false;
 					},
 					targetInRange:function(card){
-						if(get.suit(card)=='heart') return true;
+						if(card.name=='sha'&&get.suit(card)=='heart') return true;
 					},
 					cardUsable:function(card){
 						if(card.name=='sha'&&get.suit(card)=='heart') return Infinity;
@@ -2810,13 +2810,13 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					'1':{
 						mod:{
 							cardname:function(card,player){
-								if(get.color(card)=='red') return 'sha';
+								if(get.color(card)=='red'&&!card.classList.contains('muniu_handcard')) return 'sha';
 							},
 							cardnature:function(card,player){
-								if(get.color(card)=='red') return 'fire';
+								if(get.color(card)=='red'&&!card.classList.contains('muniu_handcard')) return 'fire';
 							},
 							targetInRange:function(card){
-								if(get.color(card)=='red') return true;
+								if(card.name=='sha'&&card.nature=='fire') return true;
 							},
 						},
 						ai:{
@@ -2832,10 +2832,10 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 						prompt:'本回合你的锦囊牌均视为雷杀且无使用次数限制',
 						mod:{
 							cardname:function(card,player){
-								if(['trick','delay'].contains(lib.card[card.name].type)) return 'sha';
+								if(['trick','delay'].contains(lib.card[card.name].type)&&!card.classList.contains('muniu_handcard')) return 'sha';
 							},
 							cardnature:function(card,player){
-								if(['trick','delay'].contains(lib.card[card.name].type)) return 'thunder';
+								if(['trick','delay'].contains(lib.card[card.name].type)&&!card.classList.contains('muniu_handcard')) return 'thunder';
 							},
 							cardUsable:function(card,player){
 								if(card.name=='sha'&&card.nature=='thunder') return Infinity;

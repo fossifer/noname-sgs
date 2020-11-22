@@ -2794,7 +2794,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			rejinjiu:{
 				mod:{
 					cardname:function(card,player){
-						if(card.name=='jiu') return 'sha';
+						if(card.name=='jiu'&&!card.classList.contains('muniu_handcard')) return 'sha';
 					},
 				},
 				ai:{
