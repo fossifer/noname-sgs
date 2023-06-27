@@ -5214,10 +5214,12 @@
 						if(config.connect_versus_mode=='1v1'){
 							map.connect_choice_num.show();
 							map.connect_replace_number.show();
+							map.connect_human_same_team.hide();
 						}
 						else{
 							map.connect_choice_num.hide();
 							map.connect_replace_number.hide();
+							map.connect_human_same_team.show();
 						}
 						if(config.connect_versus_mode=='2v2'||config.connect_versus_mode=='3v3'){
 							map.connect_replace_handcard.show();
@@ -5237,6 +5239,12 @@
 							'guandu':'官渡',
 						},
 						frequent:true
+					},
+					connect_human_same_team: {
+						name: '人类同队',
+						init: true,
+						frequent: true,
+						intro: '尽可能将人类匹配到一队',
 					},
 					connect_replace_handcard:{
 						name:'四号位保护',
