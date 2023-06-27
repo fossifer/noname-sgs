@@ -549,6 +549,19 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			game.phaseLoop(_status.firstAct);
 		},
 		game:{
+			isHuman: function(player) {
+				// HACK: 怎么判断是 AI 还是人类？判断昵称有点奇怪
+				return player.getState().nickname !== undefined;
+			},
+			getHumans: function() {
+				var ans = [];
+				for (var i = 0; i < game.players.length; ++i) {
+					if (game.isHuman(game.players[i])) {
+						ans.push(game.players[i]);
+					}
+				}
+				return ans;
+			},
 			getLadderName:function(score){
 				if(score<900) return '平民';
 				if(score<1000) return '卫士五';
@@ -585,6 +598,9 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				}
 				else if(lib.configOL.versus_mode=='2v2'||lib.configOL.versus_mode=='3v3'){
 					uiintro.add('<div class="text chat">四号位换牌：'+(lib.configOL.replace_handcard?'开启':'关闭'));
+					uiintro.add('<div class="text chat">人类同队：'+(lib.configOL.human_same_team?'开启':'关闭'));
+				} else {
+					uiintro.add('<div class="text chat">人类同队：'+(lib.configOL.human_same_team?'开启':'关闭'));
 				}
 				var last=uiintro.add('<div class="text chat">出牌时限：'+lib.configOL.choose_timeout+'秒');
 				// uiintro.add('<div class="text chat">屏蔽弱将：'+(lib.configOL.ban_weak?'开启':'关闭'));
@@ -2769,6 +2785,23 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					var map={};
 					var num=Math.floor(Math.random()*8);
 					list=list.splice(8-num).concat(list);
+
+					var humans = game.getHumans();
+					if (lib.configOL.human_same_team && humans.length < 5) {
+						// 保证人类一队，把 e 开头的人类和非 e 开头的电脑互换位置
+						var cur_ai_idx = 0;
+						for (var i = 0; i < game.players.length; ++i) {
+							if (game.isHuman(game.players[i]) && list[i][0] === 'e') {
+								while (list[cur_ai_idx][0] === 'e' || game.isHuman(game.players[cur_ai_idx]))
+									++cur_ai_idx;
+								var tmp = game.players[i];
+								game.players[i] = game.players[cur_ai_idx];
+								game.players[cur_ai_idx] = tmp;
+								++cur_ai_idx;
+							}
+						}
+					}
+
 					_status.firstAct=game.players[num];
 					event.current=_status.firstAct.next;
 					for(var i=0;i<8;i++){
@@ -2948,6 +2981,25 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							ref=ref.next;
 							bool=!bool;
 						}
+
+						var humans = game.getHumans();
+						if (lib.configOL.human_same_team && humans.length < 4) {
+							// 保证人类一队，把 false 的人类和 true 的电脑互换位置
+							var cur_ai_idx = 0;
+							for (var i = 0; i < game.players.length; ++i) {
+								if (game.isHuman(game.players[i]) && !game.players[i].side) {
+									while (!game.players[cur_ai_idx].side || game.isHuman(game.players[cur_ai_idx]))
+										++cur_ai_idx;
+									game.players[i].side = true;
+									game.players[cur_ai_idx].side = false;
+									var tmp = game.players[i];
+									game.players[i] = game.players[cur_ai_idx];
+									game.players[cur_ai_idx] = tmp;
+									++cur_ai_idx;
+								}
+							}
+						}
+
 						for(var i=0;i<game.players.length;i++){
 							if(game.players[i].side==game.me.side){
 								game.players[i].node.identity.firstChild.innerHTML='友';
@@ -3057,13 +3109,26 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				var next=game.createEvent('chooseCharacterOL');
 				next.setContent(function(){
 					'step 0'
-					var ref=game.players[0];
-					var bool=Math.random()<0.5;
-					var bool2=Math.random()<0.5;
-					ref.side=bool;
-					ref.next.side=bool2;
-					ref.next.next.side=!bool;
-					ref.previous.side=!bool2;
+					// 分配身份
+					var humans = game.getHumans();
+					if (lib.configOL.human_same_team && humans.length === 2) {
+						// 保证人类一队
+						for (var i = 0; i < humans.length; ++i) {
+							humans[i].side = true;
+						}
+						for (var i = 0; i < game.players.length; ++i) {
+							if (!game.isHuman(game.players[i]))
+								game.players[i].side = false;
+						}
+					} else {
+						var ref=game.players[0];
+						var bool=Math.random()<0.5;
+						var bool2=Math.random()<0.5;
+						ref.side=bool;
+						ref.next.side=bool2;
+						ref.next.next.side=!bool;
+						ref.previous.side=!bool2;
+					}
 					var firstChoose=game.players.randomGet();
 					if(firstChoose.next.side==firstChoose.side){
 						firstChoose=firstChoose.next;
@@ -7311,3 +7376,4 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 		}
 	};
 });
+
