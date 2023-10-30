@@ -387,6 +387,9 @@ table {
 	right: 7px;
 	bottom: 7px;
 	z-index: 1;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
 }
 #splash>div>.avatar {
 	width: 86px;
@@ -420,6 +423,29 @@ table {
 	border-radius: 12px;
 }
 
+/* 启动页style2 */
+#splash[data-splash_style='style2']>div {
+	width: 250px;
+	height: 350px;
+	top: calc(50% - 175px);
+}
+#splash[data-splash_style='style2']>div:first-child {
+	margin-left: 15px;
+}
+#splash[data-splash_style='style2']>div:last-child {
+	margin-right: 15px;
+}
+#splash[data-splash_style='style2']>div>.splashtext {
+	font-family: 'shousha';
+	font-size: 65px;
+}
+#splash[data-splash_style='style2'].slim>div>.splashtext {
+	right: 10px;
+	bottom: 5px;
+}
+#splash[data-splash_style='style2'].slim>div>.avatar {
+	width: 240px;
+}
 
 #arena.playerhidden>.player,
 #arena.playerhidden>#mebg,
@@ -1319,6 +1345,9 @@ body>.background.land {
 	top: 9px;
 	left: 6px;
 	text-align: center;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
 }
 .card.fullimage>.name.long {
 	top: 6px;
@@ -1587,12 +1616,12 @@ div:not(.handcards)>.card>.info>span,
 }
 .mark-container.marks>div>.markcount.menubutton {
 	font-size: 12px;
-    width: 16px;
-    height: 16px;
-    line-height: 18px;
-    position: absolute;
-    left: 36px;
-    top: 34px;
+	width: 16px;
+	height: 16px;
+	line-height: 18px;
+	position: absolute;
+	left: 36px;
+	top: 34px;
 	border-radius: 100%;
 }
 .mark-container.marks>.card.fullskin>.image{
@@ -1601,11 +1630,11 @@ div:not(.handcards)>.card>.info>span,
 }
 .mark-container.marks>.card.fullskin>.info{
 	transform: scale(0.6) !important;
-    transform-origin: top right;
-    left: auto !important;
-    right: 3px !important;
-    display: block;
-    top: 2px;
+	transform-origin: top right;
+	left: auto !important;
+	right: 3px !important;
+	display: block;
+	top: 2px;
 }
 .mark-container.marks>.card.fullskin>.name{
 	transform: scale(0.5) !important;
@@ -1616,7 +1645,7 @@ div:not(.handcards)>.card>.info>span,
 }
 .mark-container.marks>.card.fullskin>.name.long{
 	transform: scale(0.48) !important;
-    top: 1px !important;
+	top: 1px !important;
 }
 
 .button.card>.background {
@@ -1732,11 +1761,14 @@ div:not(.handcards)>.card>.info>span,
 	width: 100%
 }
 .content>div {
-	position: relative;
 	margin-top: 8px;
 	margin-bottom: 8px;
 	margin-left: 4px;
 	margin-right: 4px;
+	position: relative;
+}
+.content>div:not(.pointerdiv) {
+	width: calc(100% - 8px);
 }
 .content>.caption + .buttons:not(*:last-child){
 	margin-top: 0;
@@ -1937,6 +1969,9 @@ div:not(.handcards)>.card>.info>span,
 	top: 22px;
 	max-height: 68px;
 	overflow: hidden;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
 }
 .button.character>.hp {
 	left: 5px;
@@ -1960,8 +1995,12 @@ div:not(.handcards)>.card>.info>span,
 	left: 0;
 }
 .button.character>.identity {
-	top: -6px;
+	align-items: flex-end;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap-reverse;
 	left: 72px;
+	top: -6px;
 }
 .button.character.newstyle>.identity{
 	/*display: none;*/
@@ -1969,8 +2008,8 @@ div:not(.handcards)>.card>.info>span,
 	background: none !important;
 	/*box-shadow: none;*/
 	left: auto;
-	right: 3px;
-	top: 3px;
+	right: 6px;
+	top: 5px;
 	/*font-size: 20px;*/
 }
 .button.newstyle>.name{
@@ -1980,7 +2019,7 @@ div:not(.handcards)>.card>.info>span,
 .button.newstyle>.name.long{
 	top: 6px;
 	transform: scale(0.93);
-    transform-origin: top left;
+	transform-origin: top left;
 }
 .button.newstyle>.hp,
 .button.newstyle>.hp.text{
@@ -2009,7 +2048,7 @@ div:not(.handcards)>.card>.info>span,
 	text-align: right;
 	width: auto;
 	height: auto;
-    transform: none !important;
+	transform: none !important;
 	text-shadow: black 0 0 2px, black 0 0 3px;
 }
 
@@ -2170,6 +2209,9 @@ div:not(.handcards)>.card>.info>span,
 	top: 24px;
 	font-size: 20px;
 	font-family: 'xinwei';
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
 }
 .player>.name.name2 {
 	left: 81px
@@ -2201,7 +2243,7 @@ div:not(.handcards)>.card>.info>span,
 }
 
 .button.character>.name {
-	font-family: 'xinwei'
+	font-family: 'xinwei';
 }
 .player>.intro {
 	top: 87px;
@@ -2227,9 +2269,11 @@ div:not(.handcards)>.card>.info>span,
 	text-shadow: none;
 }
 .player>.turned>div{
-	top:calc(50% - 50px);
-    width: 100%;
-    left: 0;
+	top: calc(50% - 50px);
+	left: calc(50% - 25px);
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
 }
 .player>.chain{
 	top: calc(50% - 10px);
@@ -2461,9 +2505,9 @@ div:not(.handcards)>.card>.info>span,
 }
 #arena.oldlayout .player>.framebg{
 	transform: rotate(90deg) translateY(-240px);
-    width: 120px;
-    height: 240px;
-    transform-origin: top left;
+	width: 120px;
+	height: 240px;
+	transform-origin: top left;
 }
 #window #arena.mobile:not(.chess) .player[data-position='0']>.framebg{
 	/*display: none;*/
@@ -2563,12 +2607,12 @@ div:not(.handcards)>.card>.info>span,
 	left: -20%;
 	top: -20%;*/
 	background-size: 120%;
-    background-position: -4px -4px;
-    background-repeat: no-repeat;
+	background-position: -4px -4px;
+	background-repeat: no-repeat;
 }
 
 #arena:not(.chess) .player[data-position='0']>.equips>div>.image{
-    background-size: 115%;
+	background-size: 115%;
 }
 /*.equips>div:hover>.info{display: inline-block;
 	animation:equip_hover 1s;
@@ -2753,11 +2797,11 @@ div:not(.handcards)>.card>.info>span,
 }
 .identity {
 	text-align: center;
-	width: 22px;
-	height: 22px;
 }
 .identity>div {
+	line-height: 16px;
 	position: relative;
+	text-align: right;
 	top: 2px;
 }
 
@@ -2829,6 +2873,9 @@ div:not(.handcards)>.card>.info>span,
 
 .player>.name_seat {
 	opacity: 0;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
 }
 .player:not([data-position='0']).unseen.unseen2>.name_seat,
 .player:not([data-position='0']):not(.fullskin2).unseen>.name_seat {
@@ -2847,7 +2894,7 @@ div:not(.handcards)>.card>.info>span,
 .linked>.count {
 	right: 154px;
 }
-.acted>.identity {
+.acted>.identity>div {
 	transform: rotate(180deg);
 }
 
@@ -3765,6 +3812,9 @@ div:hover>.intro {
 #window>.choosedouble.character>.name {
 	left: 6%;
 	top: 8%;
+	white-space: nowrap;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
 }
 
 .hrefnode{
@@ -3812,19 +3862,19 @@ div:hover>.intro {
 }
 
 .player .identity {
+	align-items: flex-end;
 	border: none;
-	width: 24px;
-	height: 24px;
 	border-radius: 100%;
-	display: inline-flex;
+	display: flex;
+	flex-direction: column;
 	transition: all 0.2s;
 }
 
 .player .identity>div {
-	margin: auto;
 	position: relative;
 	font-family: 'huangcao','xinwei';
 	font-size: 24px;
+	line-height: 24px;
 	top: 0;
 }
 .player .identity.animate {
@@ -3917,6 +3967,38 @@ div[data-nature='keymm'],
 span[data-nature='keymm'] {
 	text-shadow: rgba(203, 177, 255,1) 0 0 2px,rgba(203, 177, 255,1) 0 0 2px,rgba(203, 177, 255,1) 0 0 2px,
 		rgba(203, 177, 255,1) 0 0 2px,black 0 0 1px;
+}
+
+
+div[data-nature='shen'],
+span[data-nature='shen'] {
+	text-shadow: rgba(243, 171, 27, 1) 0 0 2px,rgba(243, 171, 27, 1) 0 0 5px,rgba(243, 171, 27, 1) 0 0 10px,
+		rgba(243, 171, 27, 1) 0 0 10px,rgba(243, 171, 27, 1) 0 0 20px,rgba(243, 171, 27, 1) 0 0 20px,black 0 0 1px;
+}
+div[data-nature='shenm'],
+span[data-nature='shenm'] {
+	text-shadow: rgba(243, 171, 27, 1) 0 0 2px,rgba(243, 171, 27, 1) 0 0 5px,rgba(243, 171, 27, 1) 0 0 5px,
+		rgba(243, 171, 27, 1) 0 0 5px,black 0 0 1px;
+}
+div[data-nature='shenmm'],
+span[data-nature='shenmm'] {
+	text-shadow: rgba(243, 171, 27, 1) 0 0 2px,rgba(243, 171, 27, 1) 0 0 2px,rgba(243, 171, 27, 1) 0 0 2px,
+		rgba(243, 171, 27, 1) 0 0 2px,black 0 0 1px;
+}
+div[data-nature='qun'],
+span[data-nature='qun'] {
+	text-shadow: rgba(164, 164, 164, 1) 0 0 2px,rgba(164, 164, 164, 1) 0 0 5px,rgba(164, 164, 164, 1) 0 0 10px,
+		rgba(164, 164, 164, 1) 0 0 10px,rgba(164, 164, 164, 1) 0 0 20px,rgba(164, 164, 164, 1) 0 0 20px,black 0 0 1px;
+}
+div[data-nature='qunm'],
+span[data-nature='qunm'] {
+	text-shadow: rgba(164, 164, 164, 1) 0 0 2px,rgba(164, 164, 164, 1) 0 0 5px,rgba(164, 164, 164, 1) 0 0 5px,
+		rgba(164, 164, 164, 1) 0 0 5px,black 0 0 1px;
+}
+div[data-nature='qunmm'],
+span[data-nature='qunmm'] {
+	text-shadow: rgba(164, 164, 164, 1) 0 0 2px,rgba(164, 164, 164, 1) 0 0 2px,rgba(164, 164, 164, 1) 0 0 2px,
+		rgba(164, 164, 164, 1) 0 0 2px,black 0 0 1px;
 }
 
 .player .identity[data-color="nei"],
@@ -4211,10 +4293,8 @@ div[data-decoration="bronze"]::after{
 	left: 7px;
 	/*border:1px solid #631515;*/
 	border-radius: 4px;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-left: 1px;
-	padding-right: 1px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 	/*color:#631515;*/
 	border: 1px solid rgb(74, 29, 1);
 	color: rgb(74, 29, 1);
@@ -4270,9 +4350,9 @@ div[data-decoration="bronze"]::after{
 }
 .card.fullskin.gold>.name {
 	color: white;
-    text-shadow: black 0 0 1px, rgba(0,0,0,0.5) 0 0 1px;
+	text-shadow: black 0 0 1px, rgba(0,0,0,0.5) 0 0 1px;
 	background: rgba(234, 158, 0, 0.6);
-    border: 1px solid rgb(134, 87, 1);
+	border: 1px solid rgb(134, 87, 1);
 	box-shadow: rgba(255, 149, 0, 0.4) 0 0 10px inset;
 }
 .card.fullskin.gold>.name2 {
@@ -4382,9 +4462,9 @@ div[data-decoration="bronze"]::after{
 	background-color: red;
 }
 /* #arena>.skillbar.full { */
-    /*transform: scale(1.1);*/
-    /*box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 1px, rgba(0, 0, 0, 0.45) 0 3px 10px;
-    -webkit-animation:skillbarglow 3s infinite;*/
+	/*transform: scale(1.1);*/
+	/*box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 1px, rgba(0, 0, 0, 0.45) 0 3px 10px;
+	-webkit-animation:skillbarglow 3s infinite;*/
 /* } */
 #arena>.skillbar>.skillbartext {
 	font-family: 'xinwei';
@@ -4454,7 +4534,6 @@ div[data-decoration="bronze"]::after{
 }
 .coin_menu .content>.caption>.coin_buy>.menubutton {
 	width: auto;
-	display: inline-block;
 	position: relative;
 	float: right;
 	padding-left: 5px;
@@ -4513,12 +4592,73 @@ div[data-decoration="bronze"]::after{
 	top: 74px;
 	right: 6px;
 }
-.card .tempname {
-	top: 6px;
-	left: 6px;
-	font-size: 22px;
+.tempname {
 	color: white !important;
+	font-size: 22px;
+	left: 6px;
 	pointer-events: none;
+	top: 6px;
+}
+.tempname.vertical {
+	left: 4px;
+	top: 8px;
+	writing-mode: vertical-rl;
+	-webkit-writing-mode: vertical-rl;
+}
+.tempname.tempimage {
+	top: calc(50% - 12.5px);
+	left: 2px;
+	width: calc(100% - 4px);
+	height: 25px;
+	background-image: url('../../image/card/cardtempname_bg.png');
+	background-size: 100% 100%;
+	text-align: right;
+	writing-mode: horizontal-tb;
+	-webkit-writing-mode: horizontal-tb;
+}
+.tempname.tempimage:not([data-nature]) {
+	color: black !important;
+	text-shadow: white 0 0 2px, white 0 0 3px;
+}
+.tempname.tempimage>div {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-size: 100%;
+	background-position: -20px -30px;
+	background-repeat: no-repeat;
+}
+.tempname.tempimage>span {
+	position: relative;
+	z-index: 1;
+	line-height: 25px;
+}
+.button>.tempname {
+	font-size: 17px;
+}
+.button>.tempname:not(.tempimage) {
+	left: 5px;
+	top: 5px;
+}
+.button>.tempname .vertical {
+	left: 3px;
+	top: 6px;
+}
+.tempname.kami:not([data-nature])>span {
+	color: #1F3C38;
+}
+.tempname.ice:not([data-nature])>span {
+	color: #3B6273;
+}
+.tempname.fire:not([data-nature])>span {
+	color: #631515;
+}
+.tempname.thunder:not([data-nature])>span {
+	color: #152E63;
+}
+.tempname.poison:not([data-nature])>span {
+	color: #00312d;
 }
 /*.card.equip1 .wunature,
 .card.equip3 .wunature,
@@ -4561,6 +4701,8 @@ div[data-decoration="bronze"]::after{
 .timerbar>div:last-child {
 	background: linear-gradient(#FFDA47, #CE0404);
 	transition-timing-function: linear;
+	float: left;
+	transform-origin: left;
 }
 /*.timerbar>div:last-child{background: linear-gradient(#FFFFFF,#F0F0F0);}
 .timerbar[data-color="red"]>div:last-child{background: linear-gradient(#FF0000, #CE0404)}
@@ -4662,9 +4804,9 @@ div[data-decoration="bronze"]::after{
 }
 .dice{
 	position: absolute;
-    width: 200px;
-    height: 200px;
-    transform-style: preserve-3d;
+	width: 200px;
+	height: 200px;
+	transform-style: preserve-3d;
 	left: calc(50% - 100px);
 	top: calc(50% - 100px);
 	transition: transform 2s ease;
@@ -4707,92 +4849,92 @@ div[data-decoration="bronze"]::after{
 }
 .dice>div{
 	position: absolute;
-    width: 200px;
-    height: 200px;
-    background: #fff;
-    box-shadow:inset 0 0 40px #ccc;
-    border-radius: 40px;
+	width: 200px;
+	height: 200px;
+	background: #fff;
+	box-shadow:inset 0 0 40px #ccc;
+	border-radius: 40px;
 }
 .dice .cover, .dice .inner {
-    background: #e0e0e0;
-    box-shadow: none;
+	background: #e0e0e0;
+	box-shadow: none;
 }
 .dice .cover {
-    border-radius: 0;
-    transform: translateZ(0px);
+	border-radius: 0;
+	transform: translateZ(0px);
 }
 .dice .cover.x {
-    transform: rotateY(90deg);
+	transform: rotateY(90deg);
 }
 .dice .cover.z {
-    transform: rotateX(90deg);
+	transform: rotateX(90deg);
 }
 
 .dice .front  {
-    transform: translateZ(100px);
+	transform: translateZ(100px);
 }
 .dice .front.inner  {
-    transform: translateZ(98px);
+	transform: translateZ(98px);
 }
 .dice .back {
-    transform: rotateX(-180deg) translateZ(100px);
+	transform: rotateX(-180deg) translateZ(100px);
 }
 .dice .back.inner {
-    transform: rotateX(-180deg) translateZ(98px);
+	transform: rotateX(-180deg) translateZ(98px);
 }
 .dice .right {
-    transform: rotateY(90deg) translateZ(100px);
+	transform: rotateY(90deg) translateZ(100px);
 }
 .dice .right.inner {
-    transform: rotateY(90deg) translateZ(98px);
+	transform: rotateY(90deg) translateZ(98px);
 }
 .dice .left {
-    transform: rotateY(-90deg) translateZ(100px);
+	transform: rotateY(-90deg) translateZ(100px);
 }
 .dice .left.inner {
-    transform: rotateY(-90deg) translateZ(98px);
+	transform: rotateY(-90deg) translateZ(98px);
 }
 .dice .top {
-    transform: rotateX(90deg) translateZ(100px);
+	transform: rotateX(90deg) translateZ(100px);
 }
 .dice .top.inner {
-    transform: rotateX(90deg) translateZ(98px);
+	transform: rotateX(90deg) translateZ(98px);
 }
 .dice .bottom {
-    transform: rotateX(-90deg) translateZ(100px);
+	transform: rotateX(-90deg) translateZ(100px);
 }
 .dice .bottom.inner {
-    transform: rotateX(-90deg) translateZ(98px);
+	transform: rotateX(-90deg) translateZ(98px);
 }
 
 .dice .dot {
-    position:absolute;
-    width:46px;
-    height:46px;
-    border-radius:23px;
-    background:#444;
-    box-shadow:inset 5px 0 10px #000;
+	position:absolute;
+	width:46px;
+	height:46px;
+	border-radius:23px;
+	background:#444;
+	box-shadow:inset 5px 0 10px #000;
 }
 .dice .dot.center {
-    margin:77px 0 0 77px;
+	margin:77px 0 0 77px;
 }
 .dice .dot.dtop {
-    margin-top:20px;
+	margin-top:20px;
 }
 .dice .dot.dleft {
-    margin-left:134px;
+	margin-left:134px;
 }
 .dice .dot.dright {
-    margin-left:20px;
+	margin-left:20px;
 }
 .dice .dot.dbottom {
-    margin-top:134px;
+	margin-top:134px;
 }
 .dice .dot.center.dleft {
-    margin:77px 0 0 20px;
+	margin:77px 0 0 20px;
 }
 .dice .dot.center.dright {
-    margin:77px 0 0 134px;
+	margin:77px 0 0 134px;
 }
 
 #window.dicepaused>#arena,
@@ -5368,6 +5510,19 @@ div[data-decoration="bronze"]::after{
 
 	to {
 		transform: perspective(1000px) rotateY(360deg);
+	}
+}
+@keyframes background-position-left-center-right-center-left-center {
+	0% {
+		background-position: left center;
+	}
+
+	50% {
+		background-position: right center;
+	}
+
+	100% {
+		background-position: left center;
 	}
 }
 /*--------其它--------*/

@@ -320,8 +320,9 @@
 }
 
 .player .identity{
-	top: -8px;
-	left: 132px;
+	right: -6px;
+	top: -5px;
+	left: auto;
 }
 .player.minskin .identity{
 	left:102px;

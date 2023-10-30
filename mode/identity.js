@@ -134,34 +134,28 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						step4();
 					}
 				};
-				var step4=function(){
+				var step4=lib.genAsync(function*(){
 					clear();
 					ui.window.classList.add('noclick_important');
 					ui.click.configMenu();
 					ui.control.classList.add('noclick_click_important');
 					ui.control.style.top='calc(100% - 105px)';
-					ui.create.control('在菜单中，可以进行各项设置',function(){
-						ui.click.menuTab('选项');
-						ui.controls[0].replace('如果你感到游戏较卡，可以开启流畅模式',function(){
-							ui.controls[0].replace('在技能一栏中，可以设置自动发动或双将禁配的技能',function(){
-								ui.click.menuTab('武将');
-								ui.controls[0].replace('在武将或卡牌一栏中，单击武将/卡牌可以将其禁用',function(){
-									ui.click.menuTab('战局');
-									ui.controls[0].replace('在战局中可以输入游戏命令，或者管理录像',function(){
-										ui.click.menuTab('帮助');
-										ui.controls[0].replace('在帮助中，可以检查更新和下载素材',function(){
-											ui.click.configMenu();
-											ui.window.classList.remove('noclick_important');
-											ui.control.classList.remove('noclick_click_important');
-											ui.control.style.top='';
-											step5();
-										});
-									});
-								});
-							});
-						});
-					})
-				};
+					yield new Promise(resolve => ui.create.control('在菜单中，可以进行各项设置',resolve));
+					ui.click.menuTab('选项');
+					yield new Promise(resolve => ui.controls[0].replace('如果你感到游戏较卡，可以开启流畅模式',resolve));
+					yield new Promise(resolve => ui.controls[0].replace('在技能一栏中，可以设置自动发动或双将禁配的技能',resolve));
+					ui.click.menuTab('武将');
+					yield new Promise(resolve => ui.controls[0].replace('在武将或卡牌一栏中，单击武将/卡牌可以将其禁用',resolve));
+					ui.click.menuTab('战局');
+					yield new Promise(resolve => ui.controls[0].replace('在战局中可以输入游戏命令，或者管理录像',resolve));
+					ui.click.menuTab('帮助');
+					yield new Promise(resolve => ui.controls[0].replace('在帮助中，可以检查更新和下载素材',resolve));
+					ui.click.configMenu();
+					ui.window.classList.remove('noclick_important');
+					ui.control.classList.remove('noclick_click_important');
+					ui.control.style.top='';
+					step5();
+				});
 				var step5=function(){
 					clear();
 					ui.create.dialog('如果还有其它问题，欢迎来到百度无名杀吧进行交流');
@@ -310,6 +304,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			game.phaseLoop(_status.firstAct2||game.zhong||game.zhu||_status.firstAct||game.me);
 		},
 		game:{
+			canReplaceViewpoint:()=>true,
 			getState:function(){
 				var state={};
 				for(var i in lib.playerOL){
@@ -648,7 +643,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				}
 			},
 			chooseCharacterPurpleOL:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -833,7 +828,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				});
 			},
 			chooseCharacterPurple:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -970,7 +965,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					game.chooseCharacterPurple();
 					return;
 				}
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.showConfig=true;
 				next.addPlayer=function(player){
 					var list=lib.config.mode_config.identity.identity[game.players.length-3].slice(0);
@@ -1398,7 +1393,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						}
 					}
 
-					if(!game.zhu)	game.zhu=game.me;
+					if(!game.zhu) game.zhu=game.me;
 					else{
 						game.zhu.setIdentity();
 						game.zhu.identityShown=true;
@@ -1747,7 +1742,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					game.chooseCharacterPurpleOL();
 					return;
 				}
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -2337,7 +2332,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						if(get.population('zhong')+get.population('nei')==0||
 						get.population('zhong')+get.population('fan')==0){
 							game.broadcastAll(function(){
-								game.showIdentity();
+								if(game.showIdentity) game.showIdentity();
 								if(game.zhu&&game.zhu.isAlive()&&get.population('nei')==1&&get.config('nei_fullscreenpop')) game.me.$fullscreenpop('<span style="font-family:xinwei"><span data-nature="fire">主公</span><span data-nature="soil"> vs </span><span data-nature="thunder">内奸</span></span>',null,null,false);
 							});
 						}
@@ -2353,6 +2348,14 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							game.zhu.ai.shown=1;
 							game.zhu.setIdentity();
 							game.zhu.isZhu=true;
+							var skills=player.getStockSkills(true,true).filter(skill=>{
+								if(player.hasSkill(skill)) return false;
+								var info=get.info(skill);
+								return info&&info.zhuSkill;
+							});
+							if(skills.length){
+								for(var i of skills) player.addSkillLog(i);
+							}
 							game.zhu.node.identity.classList.remove('guessing');
 							if(lib.config.animation&&!lib.config.low_performance) game.zhu.$legend();
 							delete game.zhong;
@@ -2396,9 +2399,12 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						var effect=0,c,shown;
 						var info=get.info(card);
 						if(info.ai&&info.ai.expose){
-							if(_status.event.name=='_wuxie'){
-								if(_status.event.source&&_status.event.source.ai.shown){
-									this.ai.shown+=0.2;
+							if(_status.event.name=='_wuxie'&&card.name=='wuxie'){
+								const infomap=_status.event._info_map;
+								if(infomap){
+									if(this!=infomap.target&&infomap.player&&infomap.player.ai.shown){
+										this.ai.shown+=0.2;
+									}
 								}
 							}
 							else{

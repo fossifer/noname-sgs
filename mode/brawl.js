@@ -480,7 +480,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 								hhzz_toulianghuanzhu:{
 									enable:true,
 									cardimage:"toulianghuanzhu",
-									chongzhu:true,
+									recastable:true,
 									type:'trick',
 									filterTarget:function(card,player,target){
 										return target.skillH.length>0;
@@ -954,7 +954,6 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 								}
 							},
 							logAi:function(){},
-							hasZhuSkill:function(){return false},
 							changeLingli:function(num){
 								if(typeof num!='number') num=1;
 								if(typeof this.storage._lingli!='number') this.storage._lingli=0;
@@ -1005,7 +1004,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 								return dialog;
 							},
 							chooseCharacter:function(){
-								var next=game.createEvent('chooseCharacter',false);
+								var next=game.createEvent('chooseCharacter');
 								next.showConfig=true;
 								next.setContent(function(){
 									'step 0'
@@ -1221,7 +1220,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				content:{
 					chooseCharacterBefore:function(){
 						game.chooseCharacter=function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.showConfig=true;
 				next.addPlayer=true;
 				next.ai=function(player,list,back){
@@ -1884,8 +1883,8 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						var list=[['guanyu','guanping','guansuo','guanyinping'],
 						['caocao','caopi','caozhi','caorui'],['liubei','liushan','liuchen'],
 						['re_xiahouyuan','xiahouba','xiahoushi'],['sunjian','sunquan','sunce'],
-						['sp_zhangjiao','zhangliang','zhangbao'],['zhugeliang','zhugeguo','zhugejin','zhugeke'],
-						['mateng','machao','madai','mayunlu']];
+						['sp_zhangjiao','re_zhangliang','zhangbao'],['zhugeliang','zhugeguo','zhugejin','zhugeke'],
+						['mateng','machao','old_madai','mayunlu']];
 						list.randomSort();
 						var list2=[];
 						for(var i=0;i<list.length;i++){
@@ -1938,14 +1937,11 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					var map3=[];
 					var list1=['司','夏','诸','皇'];
 					var list2=['马','侯','葛','甫'];
-					var exclude=['界','新','大','旧','☆','神','晋','族','谋'];
 					for(var i in lib.character){
 						if(lib.filter.characterDisabled(i)) continue;
 						if(lib.character[i][1]=='key') continue;
-						var surname=lib.translate[i];
+						var surname=get.rawName2(i);
 						for(var j=0;j<surname.length;j++){
-							if((surname[j]+surname[j+1])=='手杀'){j++;continue}
-							if(exclude.contains(surname[j])) continue;
 							if(!/[a-z]/i.test(surname[j])){
 								var index=list1.indexOf(surname[j]);
 								if(index!=-1&&surname[j+1]==list2[index]){
@@ -1963,7 +1959,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						map[surname].push(i);
 					}
 					for(var i in map){
-						if(map[i].length<4){
+						if(map[i].length<6){
 							delete map[i];
 						}
 						else{
@@ -1997,7 +1993,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						else{
 							_status.brawl.enemylist=list;
 						}
-						return list.randomRemove(2);
+						return list.randomRemove(3);
 					}
 				}
 			},
@@ -2015,7 +2011,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				},
 				showcase:function(init){
 					var node=this;
-					var list=['caoxiu','wenpin','caohong','zhanghe','re_xiahouyuan','re_xuhuang','re_xuzhu'];
+					var list=['re_caoxiu','re_wenpin','tw_re_caohong','re_zhanghe','ol_xiahouyuan','ol_xuhuang','re_xuzhu'];
 					list.randomSort();
 					list.push('re_caocao');
 					var func=function(){
@@ -2115,7 +2111,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						}
 					},
 					submode:'normal',
-					list:['caoxiu','wenpin','caohong','zhanghe','re_xiahouyuan','re_xuhuang','re_xuzhu'],
+					list:['re_caoxiu','re_wenpin','tw_re_caohong','re_zhanghe','ol_xiahouyuan','ol_xuhuang','re_xuzhu'],
 					chooseCharacterFixed:true,
 					chooseCharacterAi:function(player){
 						if(player==game.zhu){
@@ -2417,7 +2413,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
  						_jiazu_jin:{
  							trigger:{player:'phaseDrawEnd'},
  							popup:'晋势',
- 							prompt2:'摸牌阶段结束时，你可以展示你于此阶段内因摸牌而获得的牌。若这些牌的花色均不同，则你摸一张牌。',
+ 							prompt2:'摸牌阶段结束时，你可以展示你于此阶段内因摸牌而得到的牌。若这些牌的花色均不同，则你摸一张牌。',
  							filter:function(event,player){
  								var hs=player.getCards('h');
  								return player.group=='jin'&&hs.length>0&&player.getHistory('gain',function(evt){
@@ -2628,7 +2624,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
   						},
   						_jiazu_jin:{
  								popup:'晋势',
- 								prompt2:'摸牌阶段结束时，你可以展示你于此阶段内因摸牌而获得的牌。若这些牌的花色均不同，则你摸一张牌。',
+ 								prompt2:'摸牌阶段结束时，你可以展示你于此阶段内因摸牌而得到的牌。若这些牌的花色均不同，则你摸一张牌。',
  							},
   						_jiazu_key:{
   							popup:'键魂',
@@ -2798,7 +2794,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
    			},
    			game.addGlobalSkill('_changeCharacter');
    			game.chooseCharacterTwo=function(){
-   				var next=game.createEvent('chooseCharacter',false);
+   				var next=game.createEvent('chooseCharacter');
    				next.setContent(function(){
    					'step 0'
    					ui.arena.classList.add('choose-character');
@@ -3263,7 +3259,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
    			game.identityVideoName='千里单骑';
    			game.saveConfig('player_number',_status.qianlidanji.player_number,'identity');
    			game.chooseCharacter=function(){
-      	var next=game.createEvent('chooseCharacter',false);
+      	var next=game.createEvent('chooseCharacter');
    				next.showConfig=true;
    				next.setContent(function(){
    					"step 0"
@@ -3775,7 +3771,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
    			]
    			game.liangjunduilei=list;
    			game.chooseCharacterTwo=function(){
-   				var next=game.createEvent('chooseCharacter',false);
+   				var next=game.createEvent('chooseCharacter');
    				next.setContent(function(){
    					'step 0'
    					for(var i in lib.skill){
@@ -4069,6 +4065,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 								var info=scene.players[i];
 								target.brawlinfo=info;
 								target.identity=info.identity;
+								if(target.identity=='zhu') target.isZhu=true;
 								target.setIdentity(info.identity);
 								target.node.marks.hide();
 								if(info.name2!='none'&&info.name2!='random'){

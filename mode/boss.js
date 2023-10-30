@@ -1127,7 +1127,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				}
 			},
 			chooseCharacter:function(func){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.showConfig=true;
 				next.customreplacetarget=func;
 				next.ai=function(player,list){
@@ -1890,7 +1890,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						event.num=1.5;
 						'step 1'
 						var card=cards.shift();
-						if(player.isEmpty(get.subtype(card))&&Math.random()<event.num){
+						if(player.canEquip(card)&&Math.random()<event.num){
 							player.equip(card);
 							event.num=0.5;
 						}
@@ -2030,42 +2030,83 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				},
 				content:function(){
 					game.log(trigger.card,'被改为神属性');
-					trigger.card.nature='kami';
+					game.setNature(trigger.card,'kami');
 				}
 			},
 			shanrangzhaoshu:{
-				trigger:{global:'gainEnd'},
+				trigger:{
+					global:['gainEnd','loseAsyncAfter'],
+				},
 				direct:true,
 				filter:function(event,player){
-					return event.player!=player&&event.player!=_status.currentPhase&&event.player.getHistory('gain')[0]==event&&player.countCards('he')+event.player.countCards('he')>0;
+					let min=0;
+					if(!player.hasSkill('shanrangzhaoshu',null,false)) min+=get.sgn(player.getEquips('shanrangzhaoshu').length)
+					const bool=player.countCards('he')>min;
+					return game.hasPlayer(current=>{
+						if(current==player||current==_status.currentPhase) return false;
+						if(!bool&&current.countCards('h')==0) return false;
+						const history=current.getHistory('gain')[0];
+						if(!history) return false;
+						if(event.name=='gain'){
+							return history==event&&event.getlx!==false;
+						}
+						return history.getParent()==event;
+					})
 				},
 				content:function(){
 					'step 0'
-					event.target=trigger.player;
-					var list=[];
-					if(player.countCards('he')>1) list.push('交给其一张牌');
-					if(trigger.player.countCards('he')>0) list.push('令其交给你一张牌');
-					event.list=list;
-					player.chooseControl('cancel2').set('choiceList',list).set('prompt',get.prompt('shanrangzhaoshu',trigger.player)).set('ai',function(){
-						if(get.attitude(_status.event.player,_status.event.getTrigger().player)<0) return _status.event.getParent().list.length-1;
-						return 'cancel2';
-					});
+					event.targets=game.filterPlayer(function(current){
+						if(current==player||current==_status.currentPhase) return false;
+						const history=current.getHistory('gain')[0];
+						if(!history) return false;
+						if(trigger.name=='gain'){
+							return history==trigger&&trigger.getlx!==false;
+						}
+						return history.getParent()==trigger;
+					}).sortBySeat(_status.currentPhase);
 					'step 1'
+					var target=event.targets.shift();
+					event.target=target;
+					if(target.isIn()){
+						var list=[];
+						var min=0;
+						if(!player.hasSkill('shanrangzhaoshu',null,false)) min+=get.sgn(player.getEquips('shanrangzhaoshu').length);
+						if(player.countCards('he')>min) list.push(`交给${get.translation(target)}一张牌`);
+						if(target.countCards('he')>0) list.push(`令${get.translation(target)}交给你一张牌`);
+						event.list=list;
+						if(list.length==0) event.goto(4);
+						else if(list.length==1) event._result={index:0};
+						else player.chooseControl('cancel2').set('choiceList',list).set('prompt',get.prompt('shanrangzhaoshu',target)).set('ai',function(){
+							if(get.attitude(_status.event.player,_status.event.getParent().target)<0) return 1;
+							return 'cancel2';
+						});
+					}
+					else event.goto(4);
+					'step 2'
 					if(result.control=='cancel2'){
-						event.finish();return;
+						event.goto(4);
+						return;
 					}
 					player.logSkill('shanrangzhaoshu',target);
 					if(event.list[result.index][0]=='令'){
-						event.player=target;
-						event.target=player;
+						event.gainner=player;
+						event.giver=target;
+						target.chooseCard('he',true,`交给${get.translation(player)}一张牌`);
 					}
-					'step 2'
-					player.chooseCard('he',true).set('filterCard',function(card,player){
-						if(player!=_status.event.getTrigger().player) return card!=player.getEquip('shanrangzhaoshu');
-						return true;
-					});
+					else{
+						event.giver=player;
+						event.gainner=target;
+						player.chooseCard('he',true,`交给${get.translation(target)}一张牌`).set('filterCard',function(card,player){
+							if(_status.event.ignoreCard) return true;
+							var cards=player.getEquips('shanrangzhaoshu');
+							if(!cards.contains(card)) return true;
+							return cards.some(cardx=>(cardx!=card&&!ui.selected.cards.contains(cardx)));
+						}).set('ignoreCard',player.hasSkill('shanrangzhaoshu',null,false));
+					}
 					'step 3'
-					if(result.cards&&result.cards.length) target.gain(result.cards,player,'giveAuto');
+					if(result.cards&&result.cards.length) event.giver.give(result.cards,event.gainner);
+					'step 4'
+					if(targets.length>0) event.goto(1);
 				},
 			},
 			lingsheji:{
@@ -2494,7 +2535,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				priority:-0.3,
 				equipSkill:false,
 				filter:function(event,player){
-					if(!player.isEmpty(2)) return false;
+					if(!player.hasEmptySlot(2)) return false;
 					return lib.skill.renwang_skill.filter.apply(this,arguments);
 				},
 			},
@@ -2615,10 +2656,10 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				priority:6,
 				audio:true,
 				filter:function(event,player){
-					if(!player.isEmpty('equip2')) return false;
+					if(!player.hasEmptySlot('equip2')) return false;
 					if(event.card.name=='nanman') return true;
 					if(event.card.name=='wanjian') return true;
-					return event.card.name=='sha'&&!get.nature(event.card);
+					return event.card.name=='sha'&&game.hasNature(event.card);
 				},
 				content:function(){
 					trigger.cancel();
@@ -2626,12 +2667,12 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				ai:{
 					effect:{
 						target:function(card,player,target,current){
-							if(!target.isEmpty('equip2')) return;
+							if(!target.hasEmptySlot('equip2')) return;
 							if(card.name=='nanman'||card.name=='wanjian') return 'zerotarget';
 							if(card.name=='sha'){
 								var equip1=player.getEquip(1);
 								if(equip1&&equip1.name=='zhuque') return 1.9;
-								if(!card.nature) return 'zerotarget';
+								if(!game.hasNature(card)) return 'zerotarget';
 							}
 						}
 					}
@@ -3076,10 +3117,6 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						return distance+1;
 					},
 				},
-				init:function(player){
-				player.$disableEquip('equip3');
-				player.$disableEquip('equip4');
-				},
 				enable:"phaseUse",
 				position:'h',
 				filter:function (event,player){
@@ -3109,6 +3146,28 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					result:{
 						player:1,
 					},
+				},
+				group:'boss_diting_init',
+				subSkill:{
+					init:{
+						trigger:{
+							global:'gameStart',
+							player:'enterGame',
+						},
+						forced:true,
+						filter:function(event,player){
+							return player.hasEnabledSlot(3)||player.hasEnabledSlot(4);
+						},
+						content:function(){
+							var disables=[];
+							for(var i=3;i<=4;i++){
+								for(var j=0;j<player.countEnabledSlot(i);j++){
+									disables.push(i);
+								}
+							}
+							if(disables.length>0) player.disableEquip(disables);
+						},
+					}
 				},
 			},
 			/*
@@ -3638,12 +3697,12 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				},
 				forced:true,
 				filter:function(event,player){
-					if(player==event.player) return event.nature=='fire'||player==event.source;
+					if(player==event.player) return event.hasNature('fire')||player==event.source;
 					return true;
 				},
 				content:function(){
 					if(player==trigger.player) trigger.cancel();
-					else trigger.nature='fire';
+					else game.setNature(trigger,'fire');
 				},
 				ai:{
 					unequip:true,
@@ -4010,7 +4069,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					thunder:{
 						trigger:{player:'damageBegin4'},
 						filter:function(event){
-							return event.nature=='thunder'&&game.roundNumber<7;
+							return event.hasNature('thunder')&&game.roundNumber<7;
 						},
 						forced:true,
 						content:function(){
@@ -4440,7 +4499,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						trigger:{player:'damageBegin1'},
 						forced:true,
 						filter:function(event,player){
-							return _status.currentPhase!=player&&event.nature=='fire';
+							return _status.currentPhase!=player&&event.hasNature('fire');
 						},
 						content:function(){
 							trigger.num++;
@@ -4617,21 +4676,21 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				trigger:{source:'damageBegin1'},
 				forced:true,
 				content:function(){
-					trigger.nature='fire';
+					game.setNature(trigger,'fire');
 				}
 			},
 			longfenghemingjian:{
 				equipSkill:true,
 				inherit:'cixiong_skill',
 				filter:function(event,player){
-					return lib.linked.contains(event.card.nature);
+					return game.hasNature(event.card,'linked');
 				},
 			},
 			qicaishenlu:{
 				trigger:{source:'damageBegin1'},
 				forced:true,
 				filter:function(event,player){
-					return lib.linked.contains(event.nature);
+					return game.hasNature(event.card,'linked');
 				},
 				content:function(){
 					trigger.num++;
@@ -5430,10 +5489,10 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				trigger:{source:'damageBegin1'},
 				forced:true,
 				filter:function(event){
-					return event.nature!='fire';
+					return !event.hasNature('fire');
 				},
 				content:function(){
-					trigger.nature='fire';
+					trigger.hasNature('fire');
 				},
 				mod:{
 					cardUsable:function(card){
@@ -6214,10 +6273,10 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 						return player.countCards('h')==0;
 					},
 					x6:function(player,event){
-						return event.nature=='fire';
+						return event.hasNature('fire');
 					},
 					x5:function(player,event){
-						return event.nature=='thunder';
+						return event.hasNature('thunder');
 					},
 					x4:function(player,event){
 						return event.name=='loseHp';
@@ -7294,7 +7353,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				trigger:{player:'damageBegin3'},
 				filter:function(event,player){
 					if(player.getEquip(2)) return false;
-					if(event.nature=='fire') return true;
+					if(event.hasNature('fire')) return true;
 				},
 				forced:true,
 				check:function(){
@@ -7948,7 +8007,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				forced:true,
 				unique:true,
 				filter:function(event){
-					return event.nature=='fire';
+					return event.hasNature('fire');
 				},
 				content:function(){
 					trigger.cancel();
@@ -8359,7 +8418,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 							}
 						});
 						for(var i in lib.card){
-							if(lib.card[i].subtype=='equip1') lib.card[i].chongzhu=true;
+							if(lib.card[i].subtype=='equip1') lib.card[i].recastable=true;
 						}
 					}
 				},
@@ -9266,9 +9325,9 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			boss_wuguanwang_ab:'五官王',
 			boss_wuguanwang:'五官王·吕岱',
 			boss_zhiwang:'治妄',
-			boss_zhiwang_info:'锁定技，当其他角色于摸牌阶段外获得牌时，你随机弃置其一张手牌。',
+			boss_zhiwang_info:'锁定技，当其他角色于摸牌阶段外得到牌时，你随机弃置其一张手牌。',
 			boss_zhiwang_planetarian:'注意事项',
-			boss_zhiwang_planetarian_info:'若触发【治妄】的角色因【治妄】触发的其他的技能（如【伤逝】【连营】等）继续获得了牌，则该角色将其武将牌变更为孙策。',
+			boss_zhiwang_planetarian_info:'若触发【治妄】的角色因【治妄】触发的其他的技能（如【伤逝】【连营】等）继续得到了牌，则该角色将其武将牌变更为孙策。',
 			boss_gongzheng:'公正',
 			boss_gongzheng_info:'锁定技，准备阶段，若你判定区有牌，你随机弃置一张你判定区的牌。',
 			boss_xuechi:'血池',
@@ -9396,7 +9455,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			jinwuluorigong:'金乌落日弓',
 			iwasawa_crowbow:'金乌落日弓',
 			lingsheji_info:'出牌阶段结束时，你可选择：1.摸一张牌。2.将一张武将牌置于武将牌上，并于回合结束后获得此牌。',
-			shanrangzhaoshu_info:'其他角色于回合外获得牌后，若是其本回合内第一次获得牌，则你可以选择一项：交给其一张牌，或令其交给你一张牌。',
+			shanrangzhaoshu_info:'其他角色于回合外得到牌后，若是其本回合内第一次得到牌，则你可以选择一项：交给其一张牌，或令其交给你一张牌。',
 			xingtianpojunfu_info:'当你于出牌阶段内使用牌指定唯一目标后，你可弃置两张牌。若如此做，其本回合内不能使用或打出牌且其防具技能无效。',
 			jinwuluorigong_info:'当你于出牌阶段内一次性失去了两张以上的手牌后，你可以弃置一名其他角色等量的牌。',
 			TheDayIBecomeAGod:'神杀',

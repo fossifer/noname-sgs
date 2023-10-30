@@ -5,8 +5,8 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 		connect:true,
 		characterSort:{
 			standard:{
-				standard_2008:["caocao","simayi","xiahoudun","zhangliao","xuzhu","guojia","zhenji","liubei","guanyu","zhangfei","zhugeliang","zhaoyun","machao","huangyueying","sunquan","ganning","lvmeng","huanggai","zhouyu","daqiao","luxun","sunshangxiang","huatuo","lvbu","diaochan","re_lidian"],
-				standard_2013:["huaxiong","re_yuanshu","re_xushu"],
+				standard_2008:["caocao","simayi","xiahoudun","zhangliao","xuzhu","guojia","zhenji","liubei","guanyu","zhangfei","zhugeliang","zhaoyun","machao","huangyueying","sunquan","ganning","lvmeng","huanggai","zhouyu","daqiao","luxun","sunshangxiang","huatuo","lvbu","diaochan"],
+				standard_2013:["huaxiong","re_yuanshu","re_xushu","re_lidian"],
 				standard_2019:["gongsunzan","xf_yiji"],
 				standard_2023:["std_panfeng"],
 			},
@@ -1087,6 +1087,9 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				firstDo:true,
 				audioname2:{old_guanzhang:'old_fuhun'},
 				audioname:['re_zhangfei','guanzhang','xiahouba'],
+				audioname2:{
+					dc_xiahouba:'paoxiao_xiahouba',
+				},
 				trigger:{player:'useCard1'},
 				forced:true,
 				filter:function(event,player){
@@ -1109,6 +1112,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					}
 				}
 			},
+			paoxiao_xiahouba:{audio:2},
 			guanxing_fail:{},
 			guanxing:{
 				audio:2,
@@ -1166,15 +1170,17 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 					var top=result.moved[0];
 					var bottom=result.moved[1];
 					top.reverse();
-					for(var i=0;i<top.length;i++){
-						ui.cardPile.insertBefore(top[i],ui.cardPile.firstChild);
-					}
-					for(i=0;i<bottom.length;i++){
-						ui.cardPile.appendChild(bottom[i]);
-					}
+					game.cardsGotoPile(
+						top.concat(bottom),
+						['top_cards',top],
+						function(event,card){
+							if(event.top_cards.includes(card)) return ui.cardPile.firstChild;
+							return null;
+						}
+					)
 					player.popup(get.cnNumber(top.length)+'上'+get.cnNumber(bottom.length)+'下');
 					game.log(player,'将'+get.cnNumber(top.length)+'张牌置于牌堆顶');
-					game.updateRoundNumber();
+					"step 2"
 					game.delayx();
 				},
 				ai:{
@@ -2223,8 +2229,8 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 				},
 				content:function(){
 					player.awakenSkill('zhanshen');
-					var card=player.getEquip(1);
-					if(card) player.discard(card);
+					var card=player.getEquips(1);
+					if(cards.length) player.discard(card);
 					player.loseMaxHp();
 					player.addSkill('mashu');
 					player.addSkill('shenji');
@@ -2471,39 +2477,39 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			},
 		},
 		characterReplace:{
-			caocao:['re_caocao','caocao'],
-			guojia:['re_guojia','guojia','ps1059_guojia','ps2070_guojia'],
-			simayi:['re_simayi','simayi','ps_simayi','ps2068_simayi'],
+			caocao:['caocao','re_caocao','sb_caocao','dc_caocao'],
+			guojia:['guojia','re_guojia','ps1059_guojia','ps2070_guojia'],
+			simayi:['simayi','re_simayi','ps_simayi','ps2068_simayi'],
 			jin_simayi:['jin_simayi','junk_simayi','ps_jin_simayi'],
-			zhenji:['re_zhenji','yj_zhenji','zhenji'],
-			xuzhu:['re_xuzhu','xuzhu'],
-			zhangliao:['re_zhangliao','zhangliao'],
-			sp_zhangliao:['sp_zhangliao','yj_zhangliao'],
-			xiahoudun:['re_xiahoudun','xin_xiahoudun','xiahoudun'],
-			liubei:['re_liubei','liubei','junk_liubei'],
-			guanyu:['re_guanyu','guanyu','ps_guanyu'],
-			zhangfei:['re_zhangfei','tw_zhangfei','xin_zhangfei','old_zhangfei','zhangfei','yj_zhangfei'],
-			zhaoyun:['re_zhaoyun','old_zhaoyun','zhaoyun','ps2063_zhaoyun','ps2067_zhaoyun'],
+			zhenji:['zhenji','re_zhenji','sb_zhenji','yj_zhenji'],
+			xuzhu:['xuzhu','re_xuzhu'],
+			zhangliao:['zhangliao','re_zhangliao'],
+			sp_zhangliao:['sp_zhangliao','yj_zhangliao','jsrg_zhangliao'],
+			xiahoudun:['xiahoudun','re_xiahoudun','xin_xiahoudun'],
+			liubei:['liubei','re_liubei','sb_liubei','dc_liubei','junk_liubei'],
+			guanyu:['guanyu','re_guanyu','ps_guanyu'],
+			zhangfei:['zhangfei','re_zhangfei','old_zhangfei','xin_zhangfei','sb_zhangfei','tw_zhangfei','yj_zhangfei'],
+			zhaoyun:['zhaoyun','re_zhaoyun','old_zhaoyun','sb_zhaoyun','ps2063_zhaoyun','ps2067_zhaoyun'],
 			sp_zhaoyun:['sp_zhaoyun','jsp_zhaoyun'],
-			machao:['re_machao','machao','ps_machao'],
-			sp_machao:['sp_machao','old_machao'],
-			zhugeliang:['re_zhugeliang','zhugeliang','ps2066_zhugeliang','ps_zhugeliang'],
-			huangyueying:['re_huangyueying','huangyueying','junk_huangyueying'],
-			sunquan:['re_sunquan','sunquan'],
-			zhouyu:['re_zhouyu','zhouyu','ps1062_zhouyu','ps2080_zhouyu'],
-			luxun:['re_luxun','luxun'],
-			lvmeng:['re_lvmeng','lvmeng'],
-			huanggai:['re_huanggai','huanggai'],
-			daqiao:['re_daqiao','daqiao'],
-			sunshangxiang:['re_sunshangxiang','sunshangxiang'],
-			ganning:['re_ganning','ganning','yongjian_ganning'],
+			machao:['machao','re_machao','sb_machao','ps_machao'],
+			sp_machao:['sp_machao','dc_sp_machao','old_machao'],
+			zhugeliang:['zhugeliang','re_zhugeliang','ps2066_zhugeliang','ps_zhugeliang'],
+			huangyueying:['huangyueying','re_huangyueying','junk_huangyueying'],
+			sunquan:['sunquan','re_sunquan','sb_sunquan','dc_sunquan'],
+			zhouyu:['zhouyu','re_zhouyu','sb_zhouyu','ps1062_zhouyu','ps2080_zhouyu'],
+			luxun:['luxun','re_luxun'],
+			lvmeng:['lvmeng','re_lvmeng','sb_lvmeng'],
+			huanggai:['huanggai','re_huanggai','sb_huanggai'],
+			daqiao:['daqiao','re_daqiao','sb_daqiao'],
+			sunshangxiang:['sunshangxiang','re_sunshangxiang','sb_sunshangxiang'],
+			ganning:['ganning','re_ganning','sb_ganning','yongjian_ganning'],
 			yj_ganning:['yj_ganning','sp_ganning'],
-			lvbu:['re_lvbu','lvbu','ps_lvbu'],
-			diaochan:['re_diaochan','diaochan'],
-			huatuo:['re_huatuo','old_huatuo','huatuo'],
-			huaxiong:['re_huaxiong','old_huaxiong','huaxiong','ol_huaxiong'],
-			yuanshu:['yl_yuanshu','yuanshu','re_yuanshu','old_yuanshu','ol_yuanshu'],
-			gongsunzan:['dc_gongsunzan','re_gongsunzan','xin_gongsunzan','gongsunzan'],
+			lvbu:['lvbu','re_lvbu','jsrg_lvbu','ps_lvbu'],
+			diaochan:['diaochan','re_diaochan','sb_diaochan'],
+			huatuo:['huatuo','re_huatuo','old_huatuo'],
+			huaxiong:['huaxiong','re_huaxiong','old_huaxiong','sb_huaxiong','ol_huaxiong'],
+			yuanshu:['yuanshu','re_yuanshu','yl_yuanshu','old_yuanshu','ol_yuanshu'],
+			gongsunzan:['gongsunzan','re_gongsunzan','dc_gongsunzan','xin_gongsunzan'],
 			re_lidian:['re_lidian','old_re_lidian','junk_lidian'],
 		},
 		translate:{
@@ -2640,7 +2646,7 @@ game.import('character',function(lib,game,ui,get,ai,_status){
 			keji_info:'弃牌阶段开始时，若你于本回合的出牌阶段内没有过使用或打出过【杀】，则你可以跳过此阶段。',
 			kurou_info:'出牌阶段，你可以失去一点体力，然后摸两张牌。',
 			yingzi_info:'摸牌阶段，你可以多摸一张牌。',
-			fanjian_info:'出牌阶段限一次。你可以令一名角色选择一种花色，然后其获得你的一张手牌。若其以此法选择的花色与其获得的牌花色不同，则你对其造成1点伤害。',
+			fanjian_info:'出牌阶段限一次。你可以令一名角色选择一种花色，然后其获得你的一张手牌。若其以此法选择的花色与其得到的牌花色不同，则你对其造成1点伤害。',
 			guose_info:'你可以将一张方片牌当做【乐不思蜀】使用。',
 			liuli_info:'当你成为【杀】的目标时，你可以弃置一张牌并将此【杀】转移给攻击范围内的一名其他角色（不能是此【杀】的使用者）。',
 			qianxun_info:'锁定技，你不能成为【顺手牵羊】和【乐不思蜀】的目标。',

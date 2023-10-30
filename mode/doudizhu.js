@@ -154,6 +154,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			game.zhu.showGiveup();
 		},
 		game:{
+			canReplaceViewpoint:()=>true,
 			recommendDizhu:[
 				're_guojia','re_huanggai','re_lvbu','re_guanyu','re_sunquan','re_xusheng','re_wuyi','re_sunben',
 				'xuyou','zhangchunhua','caochong','zhangsong','zhongyao','wangyi',
@@ -298,7 +299,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				else return player.identity=='fan';
 			},
 			chooseCharacterZhidou:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					game.no_continue_game=true;
@@ -405,7 +406,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				});
 			},
 			chooseCharacterBinglin:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					game.no_continue_game=true;
@@ -501,7 +502,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				});
 			},
 			chooseCharacterHuanle:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -588,7 +589,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			},
 			
 			chooseCharacterKaihei:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -681,7 +682,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					game.chooseCharacterBinglin();
 					return;
 				}
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.showConfig=true;
 				next.addPlayer=function(player){
 					var list=lib.config.mode_config.identity.identity[game.players.length-3].slice(0);
@@ -1107,7 +1108,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 			},
 			
 			chooseCharacterKaiheiOL:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -1224,7 +1225,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				});
 			},
 			chooseCharacterHuanleOL:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -1353,7 +1354,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				});
 			},
 			chooseCharacterBinglinOL:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -1497,7 +1498,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 				});
 			},
 			chooseCharacterZhidouOL:function(){
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -1652,7 +1653,7 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					game.chooseCharacterBinglinOL();
 					return;
 				}
-				var next=game.createEvent('chooseCharacter',false);
+				var next=game.createEvent('chooseCharacter');
 				next.setContent(function(){
 					"step 0"
 					ui.arena.classList.add('choose-character');
@@ -1849,13 +1850,6 @@ game.import('mode',function(lib,game,ui,get,ai,_status){
 					if(cards.length<num) cards.addArray(get.cards(num-cards.length));
 					else game.updateRoundNumber();
 					return cards;
-				},
-				hasZhuSkill:function(skill,player){
-					if(!this.hasSkill(skill)) return false;
-					for(var i in this.storage){
-						if(i.indexOf('zhuSkill_')==0&&this.storage[i].contains(skill)) return true;
-					}
-					return false;
 				},
 				$dieAfter:function(){
 					if(_status.video) return;
