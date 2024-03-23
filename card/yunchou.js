@@ -85,7 +85,6 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					if(result.bool){
 						target.lose(result.cards,ui.special);
 						target.$throw(result.cards);
-
 						game.log(target,'用',result.cards,'替换了',event.button.link);
 						target.gain(event.button.link);
 						target.$gain2(event.button.link);
@@ -653,7 +652,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 						player.chooseCardButton('偷梁换柱',target.getCards('h')).ai=function(button){
 							var val=get.value(button.link,player,'raw')-minval;
 							if(val>=0){
-								if(colors.contains(get.color(button.link))){
+								if(colors.includes(get.color(button.link))){
 									val+=3;
 								}
 							}
@@ -713,6 +712,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				type:'delay',
 				cardcolor:'red',
 				cardnature:'fire',
+				toself:true,
 				modTarget:function(card,player,target){
 					return lib.filter.judge(card,player,target);
 				},
@@ -725,7 +725,11 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				selectTarget:[-1,-1],
 				judge:function(card){
 					if(get.suit(card)=='heart'&&get.number(card)>1&&get.number(card)<10) return -6;
-					return 0;
+					return 1;
+				},
+				judge2:function(result){
+					if(result.bool==false) return true;
+					return false;
 				},
 				effect:function(){
 					if(result.bool==false){
@@ -765,6 +769,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 			},
 			hongshui:{
 				type:'delay',
+				toself:true,
 				enable:function(card,player){
 					return player.canAddJudge(card);
 				},
@@ -777,7 +782,11 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				selectTarget:[-1,-1],
 				judge:function(card){
 					if(get.suit(card)=='club'&&get.number(card)>1&&get.number(card)<10) return -3;
-					return 0;
+					return 1;
+				},
+				judge2:function(result){
+					if(result.bool==false) return true;
+					return false;
 				},
 				fullskin:true,
 				effect:function(){
@@ -841,15 +850,17 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					nothunder:true,
 					effect:{
 						target:function(card,player,target,current){
+							if(target.hasSkillTag('unequip2')) return;
 							if(player.hasSkillTag('unequip',false,{
 								name:card?card.name:null,
 								target:player,
 								card:card
+							})||player.hasSkillTag('unequip_ai',false,{
+								name:card?card.name:null,
+								target:target,
+								card:card
 							})) return;
-							if(get.tag(card,'natureDamage')) return 'zerotarget';
-							if(card.name=='tiesuo'){
-								return [0,0];
-							}
+							if(card.name=='tiesuo'||get.tag(card,'natureDamage')) return 'zeroplayertarget';
 						}
 					}
 				}
@@ -870,7 +881,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 				trigger:{target:'shaBefore'},
 				direct:true,
 				filter:function(event,player){
-					return !event.getParent().directHit.contains(player)&&player.hasUsableCard('youdishenru');
+					return !event.getParent().directHit.includes(player)&&player.hasUsableCard('youdishenru');
 				},
 				content:function(){
 					event.youdiinfo={
@@ -890,7 +901,7 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 					if(event.player==player) return false;
 					if(!event.player.countCards('he')) return false;
 					if(!lib.filter.targetEnabled({name:'chenhuodajie'},player,event.player)) return false;
-					if(event._notrigger.contains(event.player)) return false;
+					if(event._notrigger.includes(event.player)) return false;
 					return player.hasUsableCard('chenhuodajie');
 				},
 				content:function(){
@@ -929,9 +940,9 @@ game.import('card',function(lib,game,ui,get,ai,_status){
 			chenhuodajie:'趁火打劫',
 			chenhuodajie_info:'任意一名其他角色受到伤害时对其使用，获得其一张牌。',
 			huoshan:'火山',
-			huoshan_info:'出牌阶段，对自己使用。若判定结果为红桃2~9，则目标角色受到2点火焰伤害，距离目标1以内的其他角色受到1点火焰伤害。若判定不为红桃2~9，将之移动到下家的判定区里。',
+			huoshan_info:'出牌阶段，对自己使用。若判定结果为红桃2~9，则目标角色受到2点火焰伤害，距离目标1以内的其他角色受到1点火焰伤害。若判定结果不为红桃2~9，将之移动到下家的判定区里。',
 			hongshui:'洪水',
-			hongshui_info:'出牌阶段，对自己使用。若判定结果为梅花2~9，该角色随机弃置三张牌，距离该角色为X的角色随机弃置3-X张牌，若没有牌则失去1点体力。',
+			hongshui_info:'出牌阶段，对自己使用。若判定结果为梅花2~9，该角色随机弃置三张牌，距离该角色为X的角色随机弃置3-X张牌，若没有牌则失去1点体力。若判定结果不为梅花2~9，将之移动到下家的判定区里。',
 		},
 		list:[
 			['heart',6,'huoshan','fire'],
